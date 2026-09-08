@@ -1520,6 +1520,33 @@ def serve_dashboard():
     return HTMLResponse("<h1>Executive Command Center: index.html not found</h1>", status_code=404)
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+def serve_favicon_ico():
+    """Serve root favicon.ico directly to prevent 404s on browser requests."""
+    ico_file = os.path.join(os.path.dirname(__file__), "static", "favicon.ico")
+    if os.path.exists(ico_file):
+        return FileResponse(ico_file, media_type="image/x-icon")
+    return HTMLResponse("", status_code=204)
+
+
+@app.get("/favicon.svg", include_in_schema=False)
+def serve_favicon_svg():
+    """Serve root vector favicon.svg for modern crisp rendering."""
+    svg_file = os.path.join(os.path.dirname(__file__), "static", "favicon.svg")
+    if os.path.exists(svg_file):
+        return FileResponse(svg_file, media_type="image/svg+xml")
+    return HTMLResponse("", status_code=204)
+
+
+@app.get("/site.webmanifest", include_in_schema=False)
+def serve_site_manifest():
+    """Serve web application manifest."""
+    manifest_file = os.path.join(os.path.dirname(__file__), "static", "site.webmanifest")
+    if os.path.exists(manifest_file):
+        return FileResponse(manifest_file, media_type="application/manifest+json")
+    return HTMLResponse("", status_code=204)
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)

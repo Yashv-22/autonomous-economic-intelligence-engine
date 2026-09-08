@@ -91,7 +91,28 @@ body {
 .brand-section {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+}
+
+.brand-logo-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.brand-logo-img {
+    width: 28px;
+    height: 28px;
+    display: block;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.12);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.brand-logo-img:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
 }
 
 .brand-title {

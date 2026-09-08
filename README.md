@@ -390,7 +390,7 @@ FREELLMAPI_BASE_URL=http://localhost:3001/v1
 
 ### Start the FastAPI Engine & Web UI
 ```bash
-python -m uvicorn src.api.server:app --host 127.0.0.1 --port 8000 --reload
+python -m uvicorn src.server.app:app --host 127.0.0.1 --port 8000 --reload
 ```
 
 Open your browser to:
