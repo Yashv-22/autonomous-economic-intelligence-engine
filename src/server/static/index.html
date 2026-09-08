@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Autonomous Economic Intelligence & Opportunity Engine</title>
+    <!-- Modern Editorial Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/theme.css?v=2.7.2">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Institutional Top Bar -->
+        <header class="top-header">
+            <div class="brand-section">
+                <div class="brand-title">
+                    <span>Autonomous Economic Intelligence</span>
+                    <span class="brand-badge">Engine v2.6</span>
+                </div>
+                <div class="live-indicator">
+                    <span class="pulse-dot"></span>
+                    <span>ONLINE &bull; RESEARCH ACTIVE</span>
+                </div>
+            </div>
+            
+            <div class="header-status-strip">
+                <div class="status-pill" id="pill-gateway" title="Active Model Gateway">
+                    <span>GATEWAY:</span>
+                    <strong id="header-active-gateway">FREELLMAPI</strong>
+                </div>
+                <div class="status-pill" id="pill-hist-claims" title="Historical Claim Records (Preserved Corpus)">
+                    <span>HISTORICAL:</span>
+                    <strong id="header-historical-claims">0</strong>
+                </div>
+                <div class="status-pill" id="pill-claims" title="Persistent Deduplicated Claims (Canonical Fingerprints)">
+                    <span>CANONICAL:</span>
+                    <strong id="header-claims-count">0</strong>
+                </div>
+                <div class="status-pill" id="pill-run-claims" title="Current Run New Claims (Run Delta)">
+                    <span>RUN DELTA:</span>
+                    <strong id="header-run-claims">0</strong>
+                </div>
+                <div class="status-pill" id="pill-opps" title="Discovered Opportunities">
+                    <span>OPPORTUNITIES:</span>
+                    <strong id="header-opps-count">0</strong>
+                </div>
+                <div class="status-pill" id="pill-provenance" title="Merkle Root Hash">
+                    <span>MERKLE:</span>
+                    <strong id="header-merkle-root">GENESIS</strong>
+                </div>
+                
+                <button class="btn btn-secondary btn-sm" id="btn-verify-chain" onclick="verifySequentialAuditChain()">
+                    Verify Audit Chain
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btn-open-diagnostics" onclick="openDiagnosticsModal()">
+                    Diagnostics
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btn-open-llm-config" onclick="openLlmConfigModal()">
+                    Gateway Config
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-bar">
+            <button class="nav-tab active" data-tab="overview" onclick="switchTab('overview')">
+                Executive Command Center
+            </button>
+            <button class="nav-tab" data-tab="dossier" onclick="switchTab('dossier')">
+                Research Dossier
+                <span class="nav-counter" id="tab-dossier-counter">DOCS</span>
+            </button>
+            <button class="nav-tab" data-tab="history" onclick="switchTab('history')">
+                Research History
+                <span class="nav-counter" id="tab-history-counter">0</span>
+            </button>
+            <button class="nav-tab" data-tab="opportunities" onclick="switchTab('opportunities')">
+                Opportunity Portfolio
+                <span class="nav-counter" id="tab-opps-counter">0</span>
+            </button>
+            <button class="nav-tab" data-tab="problems" onclick="switchTab('problems')">
+                Market Problems & Friction
+                <span class="nav-counter" id="tab-problems-counter">0</span>
+            </button>
+            <button class="nav-tab" data-tab="claims" onclick="switchTab('claims')">
+                Claims & Evidence Ledger
+                <span class="nav-counter" id="tab-claims-counter">0</span>
+            </button>
+            <button class="nav-tab" data-tab="contradictions" onclick="switchTab('contradictions')">
+                Contradictions & Hypotheses
+            </button>
+            <button class="nav-tab" data-tab="graph" onclick="switchTab('graph')">
+                Economic Knowledge Graph
+            </button>
+            <button class="nav-tab" data-tab="gateway" onclick="switchTab('gateway')">
+                Gateway & Telemetry
+            </button>
+            <button class="nav-tab" data-tab="audit" onclick="switchTab('audit')">
+                Audit & Provenance
+            </button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content-canvas">
+            
+            <!-- TAB 1: EXECUTIVE COMMAND CENTER -->
+            <section id="view-overview" class="tab-view active">
+                <div class="command-center-grid">
+                    
+                    <!-- Left Sidebar: Direct Autonomous Research -->
+                    <aside class="left-sidebar-pane">
+                        <div class="card-section">
+                            <div class="pane-header">
+                                <span class="pane-title">Direct Research Engine</span>
+                            </div>
+                            <div class="pane-content">
+                                <div class="input-group">
+                                    <label class="input-label" for="research-topic">Research Domain / Topic</label>
+                                    <input type="text" id="research-topic" class="text-input" 
+                                           value="Enterprise AI Operating Model Redesign" 
+                                           placeholder="e.g. B2B FinTech Reconciliation, Healthcare Compliance">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label" for="research-query">Targeted Deep Discovery Query</label>
+                                    <textarea id="research-query" class="text-input" rows="3"
+                                              placeholder="Specify the operational problem space, technical bottlenecks, or market hypothesis to research..."></textarea>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                                    <div>
+                                        <label class="input-label" for="research-depth">Search Depth</label>
+                                        <select id="research-depth" class="select-input">
+                                            <option value="1">1 (Fast Scout)</option>
+                                            <option value="2" selected>2 (Balanced)</option>
+                                            <option value="3">3 (Deep Infiltration)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="input-label" for="research-budget">Source Budget</label>
+                                        <select id="research-budget" class="select-input">
+                                            <option value="5" selected>5 Sources</option>
+                                            <option value="10">10 Sources</option>
+                                            <option value="15">15 Sources</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary" id="btn-run-research" style="width: 100%;" onclick="runAutonomousResearch()">
+                                    <span>Execute Autonomous Discovery</span>
+                                </button>
+                                
+                                <div id="research-status-banner" style="margin-top: 10px; font-size: 11px; display: none; padding: 8px; border-radius: 4px;"></div>
+                                <div id="dossier-jump-banner" style="margin-top: 8px; font-size: 12px; display: none; padding: 8px 10px; border-radius: 4px; background: var(--accent-blue-subtle); border: 1px solid var(--accent-blue); color: var(--accent-blue); cursor: pointer; font-weight: 600;" onclick="switchTab('dossier')">
+                                    📖 Open Research Dossier & Sources →
+                                </div>
+
+                                <!-- Quick Suggestion Chips: What to Search Next -->
+                                <div class="next-searches-sidebar" id="sidebar-next-searches" style="margin-top: 14px; border-top: 1px solid var(--border-subtle); padding-top: 10px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <span style="font-size: 11px; font-weight: 700; color: var(--accent-blue); letter-spacing: 0.5px; text-transform: uppercase;">
+                                            🔮 What to Search Next
+                                        </span>
+                                        <span style="font-size: 10px; color: var(--text-muted);">1-Click</span>
+                                    </div>
+                                    <div id="sidebar-next-chips-container" class="next-chips-container">
+                                        <!-- Rendered dynamically via app.js -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search & Research History Pane -->
+                        <div class="card-section" id="sidebar-history-card">
+                            <div class="pane-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span class="pane-title" style="display: flex; align-items: center; gap: 6px;">
+                                    <span>🕒 Research History</span>
+                                    <span class="badge" id="sidebar-history-count" style="font-size: 10px; padding: 2px 6px;">0</span>
+                                </span>
+                                <button class="btn btn-secondary btn-sm" style="font-size: 10px; padding: 2px 6px; height: auto;" onclick="clearAllHistory()" title="Clear all search history">
+                                    Clear
+                                </button>
+                            </div>
+                            <div class="pane-content" style="padding: 10px;">
+                                <input type="text" id="history-search-filter" class="text-input" 
+                                       placeholder="Filter past research..." 
+                                       oninput="filterHistoryList(this.value)"
+                                       style="font-size: 11px; padding: 6px 8px; margin-bottom: 8px;">
+                                <div id="sidebar-history-list" class="sidebar-history-scroll" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;">
+                                    <!-- Rendered dynamically via app.js -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Vitality / Intelligence Summary -->
+                        <div class="card-section">
+                            <div class="pane-header">
+                                <span class="pane-title">Intelligence Telemetry</span>
+                            </div>
+                            <div class="pane-content">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                                    <div class="dimension-box">
+                                        <div class="dimension-label">Historical Corpus</div>
+                                        <div class="dimension-value" id="metric-hist-records">0</div>
+                                    </div>
+                                    <div class="dimension-box">
+                                        <div class="dimension-label">Canonical Claims</div>
+                                        <div class="dimension-value" id="metric-canon-claims">0</div>
+                                    </div>
+                                    <div class="dimension-box">
+                                        <div class="dimension-label">Run New Claims</div>
+                                        <div class="dimension-value" id="metric-run-claims">0</div>
+                                    </div>
+                                    <div class="dimension-box">
+                                        <div class="dimension-label">Audit Chain</div>
+                                        <div class="dimension-value" id="metric-chain-status" style="font-size: 11px; color: var(--accent-emerald);">VERIFIED</div>
+                                    </div>
+                                    <div class="dimension-box">
+                                        <div class="dimension-label">Graph Entities</div>
+                                        <div class="dimension-value" id="metric-graph-nodes">0</div>
+                                    </div>
+                                    <div class="dimension-box">
+                                        <div class="dimension-label">Active Provider</div>
+                                        <div class="dimension-value" id="metric-active-provider">FreeLLMAPI</div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                                    Epistemic integrity verified via SHA-256 Merkle root & sequential hash chain. Historical records immutable; canonical fingerprints deduplicated.
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Center-Right Top: Opportunity Radar Matrix -->
+                    <section class="pane radar-pane">
+                        <div class="pane-header">
+                            <span class="pane-title">
+                                <span>Opportunity Radar: Severity vs. Willingness-to-Pay</span>
+                            </span>
+                            <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                                Heuristic Scatter Matrix ($I_{opp}$)
+                            </span>
+                        </div>
+                        <div class="pane-content" style="padding: 12px;">
+                            <div class="radar-canvas-container">
+                                <canvas id="opportunity-radar-canvas"></canvas>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+                                <span>Bottom-Left: Lower Priority</span>
+                                <span>&bull; Click any node to load Dossier</span>
+                                <span style="font-weight: 600; color: var(--accent-emerald);">Top-Right: High-ROI Sweet Spot</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Center-Right Bottom: #1 Ranked Opportunity Dossier -->
+                    <section class="pane dossier-pane">
+                        <div class="pane-header">
+                            <span class="pane-title">
+                                <span>Featured Strategic Opportunity Dossier</span>
+                            </span>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary btn-sm" onclick="openBlueprintModal()">
+                                    View Full Architecture Blueprint
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="openValidationModal()">
+                                    Run Adversarial Validation
+                                </button>
+                            </div>
+                        </div>
+                        <div class="pane-content" id="dossier-content-container">
+                            <!-- Populated dynamically via app.js -->
+                            <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                                Loading highest-ranked opportunity dossier...
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Center-Right: Strategic Next Steps (What to Search Next) -->
+                    <section class="pane next-searches-pane" style="grid-column: 2;">
+                        <div class="pane-header">
+                            <span class="pane-title" style="display: flex; align-items: center; gap: 8px;">
+                                <span>🔮 Strategic Next Steps: What to Search Next</span>
+                                <span class="cat-badge" style="background: var(--accent-blue-subtle); color: var(--accent-blue);">AI Directed</span>
+                            </span>
+                            <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                                Unresolved Contradictions & Falsification Vectors
+                            </span>
+                        </div>
+                        <div class="pane-content" style="padding: 14px;">
+                            <div id="overview-next-searches-grid" class="next-searches-grid">
+                                <!-- Populated dynamically via app.js -->
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </section>
+
+            <!-- TAB: RESEARCH DOSSIER & INTELLIGENCE REPORT -->
+            <section id="view-dossier" class="tab-view" style="display: none;">
+                <!-- Dossier Control Toolbar -->
+                <div class="card-section dossier-toolbar-card" style="margin-bottom: 16px;">
+                    <div class="dossier-controls-strip">
+                        <div class="dossier-ctrl-group">
+                            <label class="ctrl-label" for="dossier-topic-select">Topic:</label>
+                            <select id="dossier-topic-select" class="select-input" onchange="onDossierTopicOrRunChange()" style="min-width: 200px; max-width: 100%;">
+                                <option value="Enterprise AI Operating Model Redesign">Enterprise AI Operating Model Redesign</option>
+                            </select>
+
+                            <label class="ctrl-label" for="dossier-run-select">Run ID:</label>
+                            <select id="dossier-run-select" class="select-input" onchange="onDossierTopicOrRunChange()" style="min-width: 160px; max-width: 100%;">
+                                <option value="">Latest Run (All Corpus)</option>
+                            </select>
+
+                            <button class="btn btn-secondary btn-sm" onclick="reloadCurrentDossier(true)" title="Force deterministic reload">
+                                ↻ Refresh
+                            </button>
+                        </div>
+
+                        <!-- Multi-Tier Information Density Switcher (Amendment #6) -->
+                        <div class="dossier-mode-pills" id="dossier-mode-pills">
+                            <button class="mode-pill active" id="pill-mode-tldr" onclick="switchDossierDensity('tldr')">
+                                ⚡ 1-Min TL;DR
+                            </button>
+                            <button class="mode-pill" id="pill-mode-executive" onclick="switchDossierDensity('executive')">
+                                📋 Strategic Brief
+                            </button>
+                            <button class="mode-pill" id="pill-mode-deep" onclick="switchDossierDensity('deep')">
+                                📚 Deep Dossier (Full Read)
+                            </button>
+                        </div>
+
+                        <!-- Action Tools -->
+                        <div class="dossier-actions-group">
+                            <button class="btn btn-primary btn-sm" id="btn-open-summarize" onclick="openLlmSummarizeModal()">
+                                ✨ Summarize with LLM
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="copyDossierMarkdown()">
+                                📋 Copy Markdown
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="window.print()">
+                                🖨️ Print / PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Institutional Provenance & Epistemic Strip (Amendments #10, #14) -->
+                    <div class="dossier-meta-strip">
+                        <div class="status-pill">
+                            <span>RUN:</span>
+                            <strong id="dossier-meta-run">RUN-LATEST</strong>
+                        </div>
+                        <div class="status-pill">
+                            <span>MERKLE:</span>
+                            <strong id="dossier-meta-merkle">B78202304419</strong>
+                        </div>
+                        <div class="status-pill">
+                            <span>EVIDENCE CONFIDENCE:</span>
+                            <strong id="dossier-meta-confidence" class="confidence-badge">UNKNOWN</strong>
+                        </div>
+                        <div class="status-pill">
+                            <span>READ TIME:</span>
+                            <strong id="dossier-meta-readtime">4 min</strong>
+                        </div>
+                        <div class="status-pill">
+                            <span>SOURCES:</span>
+                            <strong id="dossier-meta-sources">0</strong>
+                        </div>
+                        <div class="status-pill">
+                            <span>CLAIMS:</span>
+                            <strong id="dossier-meta-claims">0</strong>
+                        </div>
+                        <div class="status-pill">
+                            <span>UPDATED:</span>
+                            <strong id="dossier-meta-updated">Just Now</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2-Column Wikipedia/Academic Editorial Reader Layout -->
+                <div class="dossier-reader-layout">
+                    <!-- Main Editorial Article Column -->
+                    <article class="dossier-article-col card-section" id="dossier-printable-article">
+                        <header class="article-header">
+                            <div class="dossier-subject-tag" id="dossier-subject-tag">Operating Model Intelligence Dossier</div>
+                            <h1 class="dossier-main-title" id="dossier-title">Enterprise AI Operating Model Redesign</h1>
+                            <div class="dossier-subtitle" id="dossier-subtitle">
+                                Systematic analysis of operational fragmentation, task handoff bottlenecks, and straight-through routing architecture.
+                            </div>
+                            <div class="dossier-byline">
+                                <span>Published by <strong>Autonomous Intelligence Engine v2.6</strong></span> &bull;
+                                <span id="dossier-timestamp">2026-09-07 00:00:00 UTC</span> &bull;
+                                <span id="dossier-hash-pill" class="mono-badge">SHA: B78202304419</span>
+                            </div>
+                        </header>
+
+                        <!-- Dynamic AI Custom Summary Callout (Hidden by default, shown when user triggers LLM Summarize) -->
+                        <div id="dossier-custom-summary-container" class="custom-summary-callout" style="display: none;">
+                            <div class="summary-header">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span class="pulse-dot"></span>
+                                    <strong>EVIDENCE-LOCKED AI SYNTHESIS</strong>
+                                    <span class="model-badge" id="custom-summary-model">gemini-2.5-flash</span>
+                                </div>
+                                <span class="mode-badge" id="custom-summary-mode">EXECUTIVE</span>
+                            </div>
+                            <div class="summary-body" id="custom-summary-text"></div>
+                            <div class="summary-footer">
+                                <small>Constraint Verified: Strictly evidence-grounded • Zero external facts added • Citations preserved [n]</small>
+                            </div>
+                        </div>
+
+                        <!-- Section 1: Active Synthesis / Executive Lead (Mode Responsive) -->
+                        <section class="dossier-section" id="sec-overview">
+                            <h2 class="section-heading">1. Executive Overview & Synthesis</h2>
+                            <div class="editorial-lead-content" id="dossier-lead-content">
+                                <!-- Rendered dynamically based on TL;DR / Executive / Deep mode -->
+                            </div>
+                        </section>
+
+                        <!-- Section 2: Core Empirical Metrics Grid -->
+                        <section class="dossier-section" id="sec-metrics">
+                            <h2 class="section-heading">2. Key Quantitative Indicators & Benchmarks</h2>
+                            <div class="dossier-metrics-grid" id="dossier-metrics-grid">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </section>
+
+                        <!-- Section 3: Thematic In-Depth Evidence Sections (Deep Dossier) -->
+                        <section class="dossier-section" id="sec-findings">
+                            <h2 class="section-heading">3. Thematic Empirical Findings & Structural Mechanisms</h2>
+                            <div id="dossier-thematic-sections">
+                                <!-- Rendered dynamically with [1], [2] inline citations -->
+                            </div>
+                        </section>
+
+                        <!-- Section 4: Dialectical Contradictions -->
+                        <section class="dossier-section" id="sec-contradictions">
+                            <h2 class="section-heading">4. Preserved Cross-Source Analytical Tensions</h2>
+                            <div id="dossier-contradictions-container">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </section>
+
+                        <!-- Section 5: Falsifiable Hypotheses -->
+                        <section class="dossier-section" id="sec-hypotheses">
+                            <h2 class="section-heading">5. Formulated Problem Hypotheses & Falsification Tests</h2>
+                            <div id="dossier-hypotheses-container">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </section>
+
+                        <!-- Section 6: Research Methodology & Epistemic Limitations (Amendment #13) -->
+                        <section class="dossier-section" id="sec-methodology">
+                            <h2 class="section-heading">6. Research Methodology & Epistemic Limitations</h2>
+                            <div id="dossier-methodology-container">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </section>
+
+                        <!-- Section 7: Comprehensive Bibliography & Sources Vault (Amendments #3, #4, #5, #11) -->
+                        <section class="dossier-section" id="sec-sources">
+                            <div class="section-header-flex">
+                                <h2 class="section-heading">7. Comprehensive Bibliography & Auditable Source Vault</h2>
+                                <span class="sources-count-badge" id="sources-count-badge">0 Sources Indexed</span>
+                            </div>
+                            <p class="section-subtext">
+                                Complete provenance record of all ingested, parsed, and cited documents. Click any source to view exact cryptographic hashes, domain verification, and verbatim stored spans (<span class="badge-direct-quote">DIRECT QUOTE</span>).
+                            </p>
+                            <div class="source-vault-list" id="dossier-sources-container">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </section>
+
+                        <!-- Section 8: Contextual Follow-Up Suggestions (What to Search Next) -->
+                        <section class="dossier-section" id="sec-next-searches">
+                            <div class="section-header-flex">
+                                <h2 class="section-heading">8. Strategic Follow-Up Inquiries: What to Search Next</h2>
+                                <span class="sources-count-badge" style="background: var(--accent-blue-subtle); color: var(--accent-blue);">AI Directed</span>
+                            </div>
+                            <p class="section-subtext">
+                                Dynamically generated from empirical gaps, unresolved contradictions, and hypothesis falsification criteria in this dossier. Click any card to auto-populate and execute.
+                            </p>
+                            <div class="next-searches-grid" id="dossier-next-searches-container">
+                                <!-- Populated dynamically via app.js -->
+                            </div>
+                        </section>
+                    </article>
+
+                    <!-- Sidebar Column (Wikipedia-style Infobox + Sticky TOC) -->
+                    <aside class="dossier-sidebar-col">
+                        <!-- Wikipedia-Style Factsheet Infobox -->
+                        <div class="card-section wikipedia-infobox">
+                            <div class="infobox-header">
+                                <div class="infobox-title" id="infobox-topic">Enterprise AI Operating Model</div>
+                                <div class="infobox-subtitle">Institutional Research Dossier</div>
+                            </div>
+                            <div class="infobox-content">
+                                <div class="infobox-row">
+                                    <span class="infobox-label">Run ID</span>
+                                    <span class="infobox-value mono-val" id="infobox-run">RUN-LATEST</span>
+                                </div>
+                                <div class="infobox-row">
+                                    <span class="infobox-label">Merkle Root</span>
+                                    <span class="infobox-value mono-val" id="infobox-merkle">B78202304419</span>
+                                </div>
+                                <div class="infobox-row">
+                                    <span class="infobox-label">Confidence</span>
+                                    <span class="infobox-value" id="infobox-confidence">HIGH</span>
+                                </div>
+                                <div class="infobox-row">
+                                    <span class="infobox-label">Epistemic Breakdown</span>
+                                    <div class="infobox-distribution" id="infobox-distribution">
+                                        <!-- Distribution progress bar -->
+                                    </div>
+                                </div>
+                                <div class="infobox-row">
+                                    <span class="infobox-label">Total Sources</span>
+                                    <span class="infobox-value" id="infobox-sources-count">0 Documents</span>
+                                </div>
+                                <div class="infobox-row">
+                                    <span class="infobox-label">Total Claims</span>
+                                    <span class="infobox-value" id="infobox-claims-count">0 Canonical</span>
+                                </div>
+                                <div class="infobox-row">
+                                    <span class="infobox-label">Key Sources</span>
+                                    <span class="infobox-value" id="infobox-key-sources">McKinsey, Deloitte, ArXiv, Industry Benchmarks</span>
+                                </div>
+                                <div class="infobox-row">
+                                    <span class="infobox-label">Methodology</span>
+                                    <span class="infobox-value">Cryptographic Ingestion & Epistemic Grading</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sticky Table of Contents -->
+                        <div class="card-section dossier-toc">
+                            <div class="toc-header">Contents</div>
+                            <nav class="toc-list">
+                                <a href="#sec-overview" class="toc-item active" onclick="scrollToDossierSection('sec-overview')">1. Executive Overview</a>
+                                <a href="#sec-metrics" class="toc-item" onclick="scrollToDossierSection('sec-metrics')">2. Quantitative Benchmarks</a>
+                                <a href="#sec-findings" class="toc-item" onclick="scrollToDossierSection('sec-findings')">3. Thematic Findings</a>
+                                <a href="#sec-contradictions" class="toc-item" onclick="scrollToDossierSection('sec-contradictions')">4. Contradictions</a>
+                                <a href="#sec-hypotheses" class="toc-item" onclick="scrollToDossierSection('sec-hypotheses')">5. Falsifiable Hypotheses</a>
+                                <a href="#sec-methodology" class="toc-item" onclick="scrollToDossierSection('sec-methodology')">6. Methodology & Limitations</a>
+                                <a href="#sec-sources" class="toc-item" onclick="scrollToDossierSection('sec-sources')">7. Bibliography & Sources</a>
+                                <a href="#sec-next-searches" class="toc-item" onclick="scrollToDossierSection('sec-next-searches')">8. What to Search Next</a>
+                            </nav>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- TAB 2: OPPORTUNITY PORTFOLIO -->
+            <section id="view-opportunities" class="tab-view" style="display: none;">
+
+                <div class="card-section" style="margin-bottom: 20px;">
+                    <div class="pane-header">
+                        <span class="pane-title">Filter & Search Opportunity Portfolio</span>
+                        <div style="display: flex; gap: 12px;">
+                            <input type="text" id="filter-opp-query" class="text-input" placeholder="Search blueprints, buyers, concepts..." oninput="filterOpportunityPortfolio()" style="width: 260px;">
+                            <select id="filter-opp-category" class="select-input" onchange="filterOpportunityPortfolio()" style="width: 180px;">
+                                <option value="">All Categories</option>
+                                <option value="B2B SaaS">B2B SaaS</option>
+                                <option value="Autonomous AI Agent System">Autonomous AI Agent System</option>
+                                <option value="Automation Service">Automation Service</option>
+                                <option value="Workflow Infrastructure">Workflow Infrastructure</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="opportunity-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 16px;">
+                    <!-- Rendered by app.js -->
+                </div>
+            </section>
+
+            <!-- TAB 3: MARKET PROBLEMS -->
+            <section id="view-problems" class="tab-view" style="display: none;">
+                <div class="card-section" style="margin-bottom: 16px;">
+                    <div class="pane-header">
+                        <span class="pane-title">Validated Operational Pathologies & Market Problems</span>
+                    </div>
+                </div>
+                <div id="market-problems-container" style="display: flex; flex-direction: column; gap: 14px;">
+                    <!-- Rendered by app.js -->
+                </div>
+            </section>
+
+            <!-- TAB 4: CLAIMS & EVIDENCE LEDGER -->
+            <section id="view-claims" class="tab-view" style="display: none;">
+                <div class="card-section" style="margin-bottom: 16px;">
+                    <div class="pane-header" style="flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <span class="pane-title" style="font-size: 15px; font-weight: 700;">Epistemic Claims & Evidence Ledger</span>
+                            <span id="claims-filtered-count-badge" class="badge-pill" style="font-family: var(--font-mono); font-size: 11px; padding: 3px 8px; background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 4px;">Loading claims...</span>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <div style="position: relative;">
+                                <input type="text" id="claims-search-input" class="search-input" placeholder="🔍 Search proposition, topic, doc..." oninput="loadClaims()" style="width: 260px; padding: 6px 12px; font-size: 12px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-primary);">
+                            </div>
+                            <select id="claims-topic-filter" class="select-input" onchange="loadClaims()" style="width: 220px; font-size: 12px;">
+                                <option value="">All Topics & Domains</option>
+                            </select>
+                            <select id="claims-grade-filter" class="select-input" onchange="loadClaims()" style="width: 170px; font-size: 12px;">
+                                <option value="">All Epistemic Grades</option>
+                                <option value="FACT">FACT (Audited Baseline)</option>
+                                <option value="EVIDENCE">EVIDENCE (Empirical Data)</option>
+                                <option value="INFERENCE">INFERENCE (Derived)</option>
+                                <option value="HYPOTHESIS">HYPOTHESIS (Falsifiable)</option>
+                                <option value="RECOMMENDATION">RECOMMENDATION</option>
+                                <option value="ASSUMPTION">ASSUMPTION</option>
+                            </select>
+                            <button class="btn btn-secondary btn-sm" onclick="loadClaims()" title="Refresh claims ledger" style="padding: 6px 12px; font-size: 12px;">
+                                ↻ Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-section">
+                    <div class="pane-content" id="claims-table-container" style="padding: 0;">
+                        <!-- Rendered by app.js -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: CONTRADICTIONS & HYPOTHESES -->
+            <section id="view-contradictions" class="tab-view" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="card-section">
+                        <div class="pane-header">
+                            <span class="pane-title">Preserved Dialectical Contradictions</span>
+                        </div>
+                        <div class="pane-content" id="contradictions-container">
+                            <!-- Rendered by app.js -->
+                        </div>
+                    </div>
+                    <div class="card-section">
+                        <div class="pane-header">
+                            <span class="pane-title">Falsifiable Hypotheses & Null Tests</span>
+                        </div>
+                        <div class="pane-content" id="hypotheses-container">
+                            <!-- Rendered by app.js -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: ECONOMIC KNOWLEDGE GRAPH -->
+            <section id="view-graph" class="tab-view" style="display: none;">
+                <div class="card-section" style="margin-bottom: 14px;">
+                    <div class="pane-header">
+                        <span class="pane-title">Multi-Entity Relational Knowledge Graph (Directive #8)</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="display: flex; border: 1px solid var(--border-subtle); border-radius: 4px; overflow: hidden;">
+                                <button class="btn btn-secondary btn-sm" id="btn-graph-macro" onclick="switchGraphMode('macro')" style="border-radius: 0; background: var(--bg-surface); font-weight: 600;">Macro View (Default)</button>
+                                <button class="btn btn-secondary btn-sm" id="btn-graph-full" onclick="switchGraphMode('full')" style="border-radius: 0;">Full Evidence Graph</button>
+                            </div>
+                            <input type="text" id="graph-search" class="text-input" placeholder="Find entity / node..." style="width: 200px;" oninput="searchGraphNode()">
+                            <button class="btn btn-secondary btn-sm" onclick="resetGraphView()">Reset View</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="graph-viewport">
+                    <canvas id="knowledge-graph-canvas"></canvas>
+                </div>
+                <div style="display: flex; gap: 16px; margin-top: 10px; font-size: 11px; color: var(--text-muted);">
+                    <span><strong style="color: #1d4ed8;">&bull; Blue:</strong> Claim / Fact</span>
+                    <span><strong style="color: #b91c1c;">&bull; Red:</strong> Problem / Bottleneck</span>
+                    <span><strong style="color: #047857;">&bull; Emerald:</strong> Solution Opportunity</span>
+                    <span><strong style="color: #b45309;">&bull; Amber:</strong> Contradiction / Gap</span>
+                    <span><strong style="color: #6d28d9;">&bull; Purple:</strong> Metric / Target</span>
+                </div>
+            </section>
+
+            <!-- TAB 7: GATEWAY OBSERVABILITY & TELEMETRY -->
+            <section id="view-gateway" class="tab-view" style="display: none;">
+                <div class="card-section" style="margin-bottom: 20px;">
+                    <div class="pane-header">
+                        <span class="pane-title">Inference Gateway Architecture & Latency Telemetry (Directive #7)</span>
+                        <button class="btn btn-primary btn-sm" onclick="refreshGatewayStatus()">Ping Providers</button>
+                    </div>
+                    <div class="pane-content">
+                        <div id="gateway-providers-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                            <!-- Rendered dynamically -->
+                        </div>
+                        <div id="gateway-operational-matrix-container" style="margin-bottom: 20px;">
+                            <!-- 8-Dimensional Lifecycle Matrix Rendered dynamically -->
+                        </div>
+                        <div class="blueprint-card">
+                            <div class="blueprint-header">
+                                <span class="blueprint-title">Capability-Aware Intelligent Routing Matrix</span>
+                            </div>
+                            <div class="blueprint-body" style="font-family: var(--font-mono); font-size: 12px; background: var(--bg-subtle); padding: 12px; border-radius: 4px;">
+                                <div>&bull; <strong>CLAIM_EXTRACTION:</strong> FAST Workload &rarr; Primary: OmniRoute (llama3-70b / fast) &rarr; Fallback: FreeLLMAPI</div>
+                                <div>&bull; <strong>CONTRADICTION_DETECTION:</strong> REASONING Workload &rarr; Primary: OmniRoute (claude-3-5-sonnet / reasoning) &rarr; Fallback: Gemini 1.5 Pro</div>
+                                <div>&bull; <strong>OPPORTUNITY_ANALYSIS:</strong> ECONOMIC_REASONING &rarr; Primary: OmniRoute (deepseek-r1 / o1 / research-reasoning) &rarr; Fallback: Direct Gemini</div>
+                                <div>&bull; <strong>BLUEPRINT_GENERATION:</strong> ECONOMIC_REASONING &rarr; Primary: OmniRoute (research-reasoning) &rarr; Fallback: Mock Generator</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 8: AUDIT & MERKLE PROVENANCE -->
+            <section id="view-audit" class="tab-view" style="display: none;">
+                <div class="card-section">
+                    <div class="pane-header">
+                        <span class="pane-title">Immutable Audit Trail & Cryptographic Verification (Directive #6)</span>
+                        <button class="btn btn-secondary btn-sm" onclick="verifySequentialAuditChain()">Verify Audit Chain</button>
+                    </div>
+                    <div class="pane-content">
+                        <div id="audit-chain-verification-banner" style="margin-bottom: 16px; padding: 12px; background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: 4px; font-family: var(--font-mono); font-size: 11px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--accent-navy);">SEQUENTIAL SHA-256 HASH CHAIN:</strong>
+                                    <span id="chain-status-badge" style="display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 4px; background: rgba(4, 120, 87, 0.15); color: var(--accent-emerald); font-weight: 600;">ACTIVE</span>
+                                </div>
+                                <span id="chain-events-count" style="color: var(--text-muted);">Events: 0 Verified / 0 Legacy</span>
+                            </div>
+                            <div id="chain-verification-detail" style="margin-top: 8px; color: var(--text-secondary);">
+                                H₀ = 000...000 &bull; Hₙ = SHA256(Hₙ₋₁ + payload) &bull; Legacy records preserved as LEGACY / PRE-V2.6 without fake verification.
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 16px; display: flex; gap: 10px;">
+                            <input type="text" id="verify-span-hash" class="text-input" placeholder="Enter SHA-256 span hash to verify..." style="flex: 1;">
+                            <input type="text" id="verify-span-text" class="text-input" placeholder="Enter source text snippet..." style="flex: 2;">
+                            <button class="btn btn-primary" onclick="verifySpanProvenance()">Verify Hash</button>
+                        </div>
+                        <div id="provenance-verification-result" style="margin-bottom: 16px; font-family: var(--font-mono); font-size: 12px;"></div>
+                        <div id="audit-trail-container">
+                            <!-- Populated via app.js -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 9: SEARCH & RESEARCH HISTORY (Directive #4) -->
+            <section id="view-history" class="tab-view" style="display: none;">
+                <div class="card-section" style="margin-bottom: 20px;">
+                    <div class="pane-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span class="pane-title">Research & Search History Ledger</span>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                                Persistent audit trail of all previous research runs, deep discovery queries, epistemic claims, and Merkle roots.
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" id="tab-history-search" class="text-input" placeholder="Search history by topic or query..." oninput="filterHistoryTabTable(this.value)" style="width: 240px;">
+                            <button class="btn btn-secondary btn-sm" onclick="loadResearchHistory(true)">↻ Refresh</button>
+                            <button class="btn btn-secondary btn-sm" onclick="clearAllHistory()" style="color: var(--accent-crimson);">Clear History</button>
+                        </div>
+                    </div>
+                    <div class="pane-content" style="padding: 16px;">
+                        <div class="history-table-container">
+                            <table class="history-table" id="history-full-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Topic & Query</th>
+                                        <th>Config</th>
+                                        <th>Findings</th>
+                                        <th>Merkle Root</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-table-body">
+                                    <!-- Populated dynamically via app.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: SOLUTION BLUEPRINT -->
+    <div class="modal-backdrop" id="modal-blueprint">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title" id="blueprint-modal-title">Commercial Solution Architecture Blueprint</span>
+                <button class="modal-close-btn" onclick="closeBlueprintModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="blueprint-modal-body">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADVERSARIAL VALIDATION REPORT -->
+    <div class="modal-backdrop" id="modal-validation">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title" id="validation-modal-title">Adversarial Opportunity Validation & Falsification</span>
+                <button class="modal-close-btn" onclick="closeValidationModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="validation-modal-body">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SYSTEM DIAGNOSTICS -->
+    <div class="modal-backdrop" id="modal-diagnostics">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title">System Diagnostic Parameter Sweep</span>
+                <button class="modal-close-btn" onclick="closeDiagnosticsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="diagnostics-modal-body">
+                <div style="text-align: center; padding: 20px;">Running live parameter sweeps (SSRF, Merkle, Injections, Classifiers)...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: LLM GATEWAY CONFIG -->
+    <div class="modal-backdrop" id="modal-llm-config">
+        <div class="modal-container" style="max-width: 650px;">
+            <div class="modal-header">
+                <span class="modal-title">Inference Gateway & API Credentials</span>
+                <button class="modal-close-btn" onclick="closeLlmConfigModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label class="input-label" for="cfg-default-provider">Default Active Provider</label>
+                    <select id="cfg-default-provider" class="select-input">
+                        <option value="omniroute">OmniRoute (Multi-Model Gateway)</option>
+                        <option value="freellmapi">FreeLLMAPI (Reverse Proxy Cluster)</option>
+                        <option value="gemini">Google Gemini 1.5 Pro / Flash</option>
+                        <option value="openai">OpenAI / Groq</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="cfg-omniroute-url">OmniRoute Base URL</label>
+                    <input type="text" id="cfg-omniroute-url" class="text-input" placeholder="http://127.0.0.1:20128/v1">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="cfg-omniroute-key">OmniRoute API Key</label>
+                    <input type="password" id="cfg-omniroute-key" class="text-input" placeholder="sk-...">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="cfg-freellm-url">FreeLLMAPI Base URL</label>
+                    <input type="text" id="cfg-freellm-url" class="text-input" placeholder="http://127.0.0.1:3001">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="cfg-gemini-key">Gemini API Key</label>
+                    <input type="password" id="cfg-gemini-key" class="text-input" placeholder="AIzaSy...">
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 12px;" onclick="saveLlmConfig()">
+                    Save & Update Runtime Configuration
+                </button>
+                <div id="cfg-save-status" style="margin-top: 10px; font-size: 11px; text-align: center;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: EVIDENCE-LOCKED LLM SUMMARIZER -->
+    <div class="modal-backdrop" id="modal-summarize" style="display: none;">
+        <div class="modal-container" style="max-width: 600px;">
+            <div class="modal-header">
+                <span class="modal-title">✨ Evidence-Locked LLM Summarizer</span>
+                <button class="modal-close-btn" onclick="closeLlmSummarizeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">
+                    Generate an evidence-locked synthesis directly from extracted empirical claims and verified sources. The engine strictly prohibits inventing facts, stats, or ungrounded citations.
+                </p>
+                <div class="input-group">
+                    <label class="input-label" for="summarize-mode-select">Information Density / Format</label>
+                    <select id="summarize-mode-select" class="select-input">
+                        <option value="tldr">⚡ 1-Minute TL;DR (Punchy takeaways & empirical metrics)</option>
+                        <option value="executive" selected>📋 Strategic Executive Brief (3-Minute thesis & trade-offs)</option>
+                        <option value="deep">📚 Deep Intelligence Synthesis (Full thematic structural breakdown)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="summarize-focus-input">Custom Analytical Lens (Optional)</label>
+                    <input type="text" id="summarize-focus-input" class="text-input" 
+                           placeholder="e.g. Focus on financial ROI, technical queue latency, or governance risk...">
+                </div>
+                <div id="summarize-status-message" style="display: none; padding: 10px; border-radius: 4px; font-size: 12px; margin-top: 12px;"></div>
+                <button class="btn btn-primary" id="btn-execute-summary" style="width: 100%; margin-top: 14px;" onclick="executeLlmSummarize()">
+                    <span>Generate Evidence-Locked Summary</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+
+    <script src="/static/js/graph.js?v=2.7.2"></script>
+    <script src="/static/js/app.js?v=2.7.2"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+# ==============================================================================
+# Autonomous Economic Intelligence & Opportunity Engine - .gitignore
+# ==============================================================================
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+
+# Python Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Environment Variables & Secrets (CRITICAL SECURITY)
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+*.cert
+*.pfx
+*.p12
+*.token
+*.cookie
+*.cookies
+*.session
+secrets/
+credentials/
+
+# Databases, SQLite & Local Runtime State
+*.db
+*.db-journal
+*.db-wal
+*.sqlite
+*.sqlite3
+output/*
+!output/.gitkeep
+output_audit_test/
+data/raw/*
+!data/raw/.gitkeep
+data/normalized/*
+!data/normalized/.gitkeep
+data/training_datasets/*
+!data/training_datasets/.gitkeep
+data/sessions/*
+!data/sessions/.gitkeep
+
+# Logs & Diagnostics
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Node Modules & Frontend Build Outputs
+node_modules/
+.next/
+.turbo/
+.build/
+dist/
+build/
+out/
+*.egg-info/
+eggs/
+develop-eggs/
+
+# Third-Party Infrastructure & Modular Vendored Runtimes
+infrastructure/
+vendor/
+.agent-reach/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Scratch, Local Development & Backups
+backups/
+scratch/
+scratch_*
+temp/
+tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# OS & Desktop Artifacts
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE & Editor Configurations
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.claude/

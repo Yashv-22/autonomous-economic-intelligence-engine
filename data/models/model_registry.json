@@ -1,0 +1,115 @@
+{
+  "model-v001": {
+    "model_version_id": "model-v001",
+    "base_model_name": "gemini-1.5-pro",
+    "dataset_version": "dataset-v20260903211334",
+    "training_run_id": "RUN-883812CD",
+    "hyperparameters": {
+      "epochs": 3,
+      "lr": 2e-05,
+      "lora_r": 16
+    },
+    "evaluation_scores": {
+      "grounding_accuracy": 0.92,
+      "hallucination_rate": 0.02,
+      "contradiction_recall": 0.88,
+      "epistemic_classification_accuracy": 0.91,
+      "adversarial_injection_resistance": 0.98
+    },
+    "known_weaknesses": [],
+    "deployment_status": "SHADOW",
+    "created_at": "2026-09-03T21:13:34.560081+00:00",
+    "promoted_at": "2026-09-03T21:13:34.561675+00:00",
+    "previous_version_id": null
+  },
+  "model-v1788470348": {
+    "model_version_id": "model-v1788470348",
+    "base_model_name": "operating-model-base-v1",
+    "dataset_version": "dataset-v20260903211908",
+    "training_run_id": "RUN-3A295A9B",
+    "hyperparameters": {
+      "epochs": 3,
+      "learning_rate": 2e-05
+    },
+    "evaluation_scores": {
+      "overall_score": 0.95
+    },
+    "known_weaknesses": [],
+    "deployment_status": "CANDIDATE",
+    "created_at": "2026-09-03T21:19:08.388435+00:00",
+    "promoted_at": null,
+    "previous_version_id": null
+  },
+  "model-v1788470390": {
+    "model_version_id": "model-v1788470390",
+    "base_model_name": "operating-model-base-v1",
+    "dataset_version": "dataset-v20260903211950",
+    "training_run_id": "RUN-1C036124",
+    "hyperparameters": {
+      "epochs": 3,
+      "learning_rate": 2e-05
+    },
+    "evaluation_scores": {
+      "overall_score": 0.95
+    },
+    "known_weaknesses": [],
+    "deployment_status": "SHADOW",
+    "created_at": "2026-09-03T21:19:50.690366+00:00",
+    "promoted_at": "2026-09-03T21:19:50.692034+00:00",
+    "previous_version_id": null
+  },
+  "model-v004": {
+    "model_version_id": "model-v004",
+    "base_model_name": "operating-model-base-v2-finetuned",
+    "dataset_version": "dataset-v20260908004354-trained",
+    "training_run_id": "RUN-1B3FD442",
+    "hyperparameters": {
+      "epochs": 5,
+      "learning_rate": 1.8e-05,
+      "lora_r": 32,
+      "lora_alpha": 64,
+      "warmup_ratio": 0.1,
+      "optimizer": "AdamW",
+      "loss_target": 0.0142
+    },
+    "evaluation_scores": {
+      "grounding_accuracy": 0.965,
+      "hallucination_rate": 0.012,
+      "contradiction_recall": 0.94,
+      "epistemic_classification_accuracy": 0.955,
+      "adversarial_injection_resistance": 0.99
+    },
+    "known_weaknesses": [],
+    "deployment_status": "SHADOW",
+    "created_at": "2026-09-08T00:43:56.242320+00:00",
+    "promoted_at": "2026-09-08T00:43:56.243421+00:00",
+    "previous_version_id": "model-v1788470390"
+  },
+  "model-v005": {
+    "model_version_id": "model-v005",
+    "base_model_name": "operating-model-base-v2-finetuned",
+    "dataset_version": "dataset-v20260908004555-trained",
+    "training_run_id": "RUN-FABE3101",
+    "hyperparameters": {
+      "epochs": 5,
+      "learning_rate": 1.8e-05,
+      "lora_r": 32,
+      "lora_alpha": 64,
+      "warmup_ratio": 0.1,
+      "optimizer": "AdamW",
+      "loss_target": 0.0142
+    },
+    "evaluation_scores": {
+      "grounding_accuracy": 0.965,
+      "hallucination_rate": 0.012,
+      "contradiction_recall": 0.94,
+      "epistemic_classification_accuracy": 0.955,
+      "adversarial_injection_resistance": 0.99
+    },
+    "known_weaknesses": [],
+    "deployment_status": "PRODUCTION",
+    "created_at": "2026-09-08T00:45:56.957652+00:00",
+    "promoted_at": "2026-09-08T00:45:56.958772+00:00",
+    "previous_version_id": "model-v004"
+  }
+}
