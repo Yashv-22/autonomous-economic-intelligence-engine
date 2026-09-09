@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TestSprite/testsprite-cli/v0.10.0/schemas/plan.schema.json",
+  "projectId": "70f486f7-7b14-4976-89c7-3f9fc87b268a",
+  "type": "frontend",
+  "name": "System Diagnostics modal displays parameter sweep results",
+  "description": "Clicking the Diagnostics button in the top header opens the diagnostic sweep modal with overall pass status.",
+  "priority": "p1",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /"
+    },
+    {
+      "type": "action",
+      "description": "Click on the Diagnostics button in the top navigation header"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the System Diagnostic Parameter Sweep modal opens"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the overall status confirms ALL TESTS PASSED or live parameter checks table"
+    }
+  ]
+}

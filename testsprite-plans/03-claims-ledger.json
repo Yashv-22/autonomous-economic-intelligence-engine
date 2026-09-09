@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TestSprite/testsprite-cli/v0.10.0/schemas/plan.schema.json",
+  "projectId": "70f486f7-7b14-4976-89c7-3f9fc87b268a",
+  "type": "frontend",
+  "name": "Claims and Evidence Ledger tab renders epistemic claims",
+  "description": "Switching to the Claims and Evidence Ledger tab renders canonical propositions and epistemic grade filters.",
+  "priority": "p1",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /"
+    },
+    {
+      "type": "action",
+      "description": "Click on the Claims & Evidence Ledger tab in the navigation bar"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the claims ledger table renders with grade badges such as FACT, INFERENCE, or EVIDENCE"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the epistemic grade filter dropdown is visible with options for FACT and EVIDENCE"
+    }
+  ]
+}

@@ -459,23 +459,33 @@ function initRadarCanvas() {
     resize();
 
     // Click on canvas to select opportunity
-    canvas.addEventListener('click', (e) => {
+    function handleRadarInteraction(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
+        const clickX = clientX - rect.left;
+        const clickY = clientY - rect.top;
 
         // Check which point was clicked
         for (let i = 0; i < radarOpportunities.length; i++) {
             const opp = radarOpportunities[i];
             const pt = getOppCoordinates(opp, canvas.width, canvas.height);
             const dist = Math.hypot(clickX - pt.x, clickY - pt.y);
-            if (dist <= pt.r + 6) {
+            if (dist <= pt.r + 10) {
                 loadOpportunityDossier(opp, i + 1);
                 renderRadar();
                 break;
             }
         }
+    }
+
+    canvas.addEventListener('click', (e) => {
+        handleRadarInteraction(e.clientX, e.clientY);
     });
+
+    canvas.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+            handleRadarInteraction(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    }, { passive: true });
 }
 
 function getOppCoordinates(opp, width, height) {

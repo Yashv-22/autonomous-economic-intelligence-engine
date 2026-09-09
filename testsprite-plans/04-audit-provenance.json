@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TestSprite/testsprite-cli/v0.10.0/schemas/plan.schema.json",
+  "projectId": "70f486f7-7b14-4976-89c7-3f9fc87b268a",
+  "type": "frontend",
+  "name": "Audit and Provenance verifies cryptographic hash continuity",
+  "description": "Opening the Audit & Provenance tab and clicking Verify Audit Chain performs SHA-256 integrity validation.",
+  "priority": "p0",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /"
+    },
+    {
+      "type": "action",
+      "description": "Click on the Audit & Provenance tab in the navigation bar"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the sequential SHA-256 hash chain verification banner is visible"
+    },
+    {
+      "type": "action",
+      "description": "Click the Verify Audit Chain button"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the status badge displays CHAIN VERIFIED indicating cryptographic continuity"
+    }
+  ]
+}

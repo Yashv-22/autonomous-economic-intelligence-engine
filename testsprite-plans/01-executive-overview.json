@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TestSprite/testsprite-cli/v0.10.0/schemas/plan.schema.json",
+  "projectId": "70f486f7-7b14-4976-89c7-3f9fc87b268a",
+  "type": "frontend",
+  "name": "Executive Command Center displays telemetry and opportunity radar",
+  "description": "Navigating to the root dashboard loads the Autonomous Economic Intelligence header, live telemetry counters, and the opportunity radar section.",
+  "priority": "p0",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the top header displays the title 'Autonomous Economic Intelligence' and the live status 'ONLINE • RESEARCH ACTIVE'"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the Intelligence Telemetry section is visible with Historical Corpus and Canonical Claims counter cards"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the Opportunity Radar panel is visible containing the canvas element and heuristic scatter matrix description"
+    }
+  ]
+}

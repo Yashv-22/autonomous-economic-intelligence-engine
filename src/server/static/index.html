@@ -142,7 +142,7 @@
                                               placeholder="Specify the operational problem space, technical bottlenecks, or market hypothesis to research..."></textarea>
                                 </div>
                                 
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                                <div class="search-options-grid">
                                     <div>
                                         <label class="input-label" for="research-depth">Search Depth</label>
                                         <select id="research-depth" class="select-input">
@@ -213,7 +213,7 @@
                                 <span class="pane-title">Intelligence Telemetry</span>
                             </div>
                             <div class="pane-content">
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                                <div class="telemetry-dimensions-grid">
                                     <div class="dimension-box">
                                         <div class="dimension-label">Historical Corpus</div>
                                         <div class="dimension-value" id="metric-hist-records">0</div>
@@ -292,7 +292,7 @@
                     </section>
 
                     <!-- Center-Right: Strategic Next Steps (What to Search Next) -->
-                    <section class="pane next-searches-pane" style="grid-column: 2;">
+                    <section class="pane next-searches-pane">
                         <div class="pane-header">
                             <span class="pane-title" style="display: flex; align-items: center; gap: 8px;">
                                 <span>🔮 Strategic Next Steps: What to Search Next</span>
@@ -585,7 +585,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="opportunity-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 16px;">
+                <div id="opportunity-cards-grid" class="opportunity-cards-grid">
                     <!-- Rendered by app.js -->
                 </div>
             </section>
@@ -641,7 +641,7 @@
 
             <!-- TAB 5: CONTRADICTIONS & HYPOTHESES -->
             <section id="view-contradictions" class="tab-view" style="display: none;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="contradictions-split-grid">
                     <div class="card-section">
                         <div class="pane-header">
                             <span class="pane-title">Preserved Dialectical Contradictions</span>
@@ -696,7 +696,7 @@
                         <button class="btn btn-primary btn-sm" onclick="refreshGatewayStatus()">Ping Providers</button>
                     </div>
                     <div class="pane-content">
-                        <div id="gateway-providers-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                        <div id="gateway-providers-cards" class="gateway-providers-grid">
                             <!-- Rendered dynamically -->
                         </div>
                         <div id="gateway-operational-matrix-container" style="margin-bottom: 20px;">

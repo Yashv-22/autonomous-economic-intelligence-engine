@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TestSprite/testsprite-cli/v0.10.0/schemas/plan.schema.json",
+  "projectId": "70f486f7-7b14-4976-89c7-3f9fc87b268a",
+  "type": "frontend",
+  "name": "Opportunity Portfolio tab displays strategic opportunity cards",
+  "description": "Switching to the Opportunity Portfolio tab displays discovered opportunities with market category filters and ranked scores.",
+  "priority": "p1",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /"
+    },
+    {
+      "type": "action",
+      "description": "Click on the Opportunity Portfolio tab in the navigation bar"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the Opportunity Portfolio view is displayed showing search filter input and category dropdown"
+    },
+    {
+      "type": "assertion",
+      "description": "Verify the opportunity cards grid renders ranked strategic opportunity cards"
+    }
+  ]
+}

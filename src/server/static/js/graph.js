@@ -93,6 +93,62 @@ class KnowledgeGraphVisualizer {
             this.scale = Math.max(0.2, Math.min(3.0, this.scale * zoomFactor));
             this.render();
         }, { passive: false });
+
+        // Touch events for mobile & tablet support
+        let initialDistance = 0;
+        let initialScale = 1;
+
+        this.canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                const rect = this.canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                const touchX = touch.clientX - rect.left;
+                const touchY = touch.clientY - rect.top;
+
+                const clicked = this.findNodeAt(touchX, touchY);
+                if (clicked) {
+                    this.selectedNode = clicked;
+                    if (window.onGraphNodeSelected) {
+                        window.onGraphNodeSelected(clicked);
+                    }
+                    this.render();
+                } else {
+                    this.isDragging = true;
+                    this.dragStartX = touchX - this.panX;
+                    this.dragStartY = touchY - this.panY;
+                }
+            } else if (e.touches.length === 2) {
+                this.isDragging = false;
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                initialDistance = Math.hypot(dx, dy);
+                initialScale = this.scale;
+            }
+        }, { passive: true });
+
+        this.canvas.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 1 && this.isDragging) {
+                const rect = this.canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                const touchX = touch.clientX - rect.left;
+                const touchY = touch.clientY - rect.top;
+                this.panX = touchX - this.dragStartX;
+                this.panY = touchY - this.dragStartY;
+                this.render();
+            } else if (e.touches.length === 2 && initialDistance > 0) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                const dist = Math.hypot(dx, dy);
+                const factor = dist / initialDistance;
+                this.scale = Math.max(0.2, Math.min(3.0, initialScale * factor));
+                this.render();
+            }
+        }, { passive: true });
+
+        this.canvas.addEventListener('touchend', () => {
+            this.isDragging = false;
+            initialDistance = 0;
+        });
     }
 
     setData(nodes, edges) {
