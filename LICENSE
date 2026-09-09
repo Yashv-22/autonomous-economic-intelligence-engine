@@ -1,21 +1,118 @@
-MIT License
+PROPRIETARY PERSONAL-USE-ONLY LICENSE
+Copyright (c) 2026 Yashv-22
+
+All rights reserved.
+
+This software, source code, documentation, models, configurations,
+algorithms, interfaces, designs, and associated materials
+(the "Software") are the exclusive intellectual property of
+Yashv-22, except for third-party components that are separately
+licensed under their respective licenses.
+
+1. PERSONAL USE BY COPYRIGHT HOLDER
+
+Permission to use, execute, modify, reproduce, deploy, and otherwise
+operate the Software is granted exclusively to Yashv-22.
+
+No other person, organization, company, entity, or third party is
+granted permission to use, execute, deploy, or otherwise operate the
+Software for personal, commercial, organizational, educational,
+research, production, or other purposes.
+
+2. CONTRIBUTIONS
+
+Other persons may inspect the source code and may submit contributions,
+patches, bug fixes, documentation, suggestions, or other modifications
+to the project, provided that such contribution is made for the purpose
+of improving the Software and not for obtaining permission to use,
+deploy, execute, or distribute the Software independently.
+
+Submitting a contribution does not grant the contributor, or any other
+person, a license or right to use, execute, deploy, distribute,
+commercialize, or otherwise exploit the Software.
+
+3. NO INDEPENDENT USE
+
+Except for Yashv-22, no person or entity may, without prior written
+permission from Yashv-22:
+
+- use or execute the Software;
+- deploy the Software;
+- use the Software as part of a personal project;
+- use the Software for a business or organization;
+- use the Software commercially;
+- offer the Software as a service;
+- incorporate the Software into another product or service;
+- reproduce or distribute the Software;
+- sublicense the Software;
+- sell or otherwise commercialize the Software;
+- create or operate a derivative implementation for their own use.
+
+4. SOURCE CODE ACCESS
+
+Publication of the source code does not constitute a grant of rights
+to use the Software.
+
+Viewing, studying, reviewing, or discussing the source code does not,
+by itself, grant permission to execute, deploy, reproduce, distribute,
+or otherwise use the Software.
+
+5. CONTRIBUTOR RIGHTS
+
+Contributors retain ownership of the original intellectual property
+they independently contribute, unless otherwise agreed in writing.
+
+By submitting a contribution to the project, the contributor grants
+Yashv-22 a perpetual, worldwide, irrevocable, royalty-free,
+non-exclusive license to use, reproduce, modify, adapt, incorporate,
+publish, distribute, sublicense, and otherwise exploit that contribution
+as part of the Software and derivative works.
+
+Nothing in this section grants the contributor permission to use the
+resulting Software independently.
+
+6. THIRD-PARTY COMPONENTS
+
+This license applies only to material owned or controlled by
+Yashv-22.
+
+Third-party libraries, frameworks, models, datasets, APIs, tools,
+services, and other components remain subject to their respective
+licenses and terms.
+
+Where a third-party component is distributed with or referenced by
+the Software, its applicable license must be respected.
+
+7. NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+NONINFRINGEMENT.
+
+IN NO EVENT SHALL YASHV-22 BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR
+THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+8. TERMINATION
+
+Any permission granted under this license, if any, terminates
+immediately upon violation of its terms.
+
+Upon termination, the violating party must cease use and deployment
+of the Software and, where legally applicable, delete copies of the
+Software under their control.
+
+9. WRITTEN PERMISSION
+
+Yashv-22 may grant additional permissions to specific persons or
+organizations through a separate written agreement or license.
+
+Such permission must be explicit and may contain additional
+conditions.
+
+10. COPYRIGHT NOTICE
 
 Copyright (c) 2026 Yashv-22
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+All rights reserved.
