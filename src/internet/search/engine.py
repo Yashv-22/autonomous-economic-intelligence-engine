@@ -28,6 +28,7 @@ class MultiProviderSearchEngine:
         providers: Optional[List[BaseSearchProvider]] = None,
         fallback_to_mock: bool = True,
         enable_agent_reach: bool = True,
+        enable_firecrawl: bool = True,
     ):
         if providers:
             self.primary_provider = providers[0]
@@ -43,6 +44,10 @@ class MultiProviderSearchEngine:
                 self.primary_provider = primary_provider or DuckDuckGoSearchProvider()
                 if agent_reach:
                     default_secondary.append(agent_reach)
+
+            if enable_firecrawl:
+                from src.internet.providers.firecrawl_provider import FirecrawlProvider
+                default_secondary.append(FirecrawlProvider())
 
             default_secondary.extend([
                 ArXivSearchProvider(),
@@ -90,7 +95,7 @@ class MultiProviderSearchEngine:
                 logger.debug(f"Fallback DDG error: {ddg_err}")
 
         # 2. Academic / Domain specific search executed in parallel
-        if (include_academic or (dimension and dimension.lower() in ["academic", "technical", "economic"])) and self.secondary_providers:
+        if include_academic and self.secondary_providers:
             def _run_sec_search(prov):
                 try:
                     return prov.search(query, max_results=5)

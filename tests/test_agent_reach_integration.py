@@ -217,10 +217,12 @@ class TestAgentReachIntegration(unittest.TestCase):
     def test_cli_commands_subprocess(self):
         """Verify agent-reach CLI binary responds to --help and version."""
         import subprocess
+        import sys
 
         proc_help = subprocess.run(
-            ["python", "-m", "agent_reach.cli", "--help"],
+            [sys.executable, "-m", "agent_reach.cli", "--help"],
             capture_output=True,
+            stdin=subprocess.DEVNULL,
             encoding="utf-8",
             errors="replace",
             timeout=10,
@@ -229,8 +231,9 @@ class TestAgentReachIntegration(unittest.TestCase):
         self.assertIn("Give your AI Agent eyes to see the entire internet", proc_help.stdout)
 
         proc_ver = subprocess.run(
-            ["python", "-m", "agent_reach.cli", "--version"],
+            [sys.executable, "-m", "agent_reach.cli", "--version"],
             capture_output=True,
+            stdin=subprocess.DEVNULL,
             encoding="utf-8",
             errors="replace",
             timeout=10,

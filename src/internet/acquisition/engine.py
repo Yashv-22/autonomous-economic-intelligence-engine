@@ -8,6 +8,7 @@ from typing import List, Dict, Any, Optional
 from src.internet.providers.base import FetchResult, SearchResultItem
 from src.internet.providers.agent_reach_provider import AgentReachFetchProvider
 from src.internet.fetcher.fetcher import WebFetcher
+from src.internet.acquisition.router import AdaptiveAcquisitionRouter, AcquisitionRequirement
 from src.security.network import network_validator
 from src.security.sanitizer import ContentSanitizer
 from src.core.logging import logger
@@ -15,21 +16,31 @@ from src.core.logging import logger
 
 class AcquisitionEngine:
     """
-    Secure internet content acquisition engine.
+    Secure internet content acquisition engine powered by AdaptiveAcquisitionRouter.
     """
 
-    def __init__(self, fetcher: Optional[WebFetcher] = None):
+    def __init__(
+        self,
+        fetcher: Optional[WebFetcher] = None,
+        router: Optional[AdaptiveAcquisitionRouter] = None,
+    ):
         self.fetcher = fetcher or WebFetcher()
         self.agent_reach_fetcher = AgentReachFetchProvider()
+        self.router = router or AdaptiveAcquisitionRouter(
+            native_fetcher=self.fetcher,
+            agent_reach_fetcher=self.agent_reach_fetcher,
+        )
 
     def acquire_sources(
         self,
         sources: List[SearchResultItem],
         max_sources: int = 10,
+        needs_javascript: bool = False,
+        research_run_id: Optional[str] = None,
     ) -> List[FetchResult]:
         """
-        Acquire full text content for discovered search items.
-        Applies SSRF validation and isolates untrusted external data.
+        Acquire full text content for discovered search items using adaptive routing.
+        Applies SSRF validation, dynamic fallback, and isolates untrusted external data.
         """
         acquired: List[FetchResult] = []
 
@@ -38,37 +49,20 @@ class AcquisitionEngine:
             if not url:
                 continue
 
-            # 1. SSRF and scheme validation
+            req = AcquisitionRequirement(
+                url=url,
+                capability="render_dynamic" if needs_javascript else "fetch",
+                needs_javascript=needs_javascript,
+                research_run_id=research_run_id,
+            )
+
             try:
-                network_validator.validate_url(url)
+                result, audit = self.router.route_acquisition(req)
+                if result and result.is_success and result.raw_content:
+                    acquired.append(result)
             except Exception as e:
-                logger.warning(f"Acquisition blocked by security policy for '{url}': {e}")
+                logger.warning(f"AcquisitionEngine: Routing error for '{url}': {e}")
                 continue
 
-            # 2. Acquire content via Agent Reach fetcher first, then WebFetcher
-            result: Optional[FetchResult] = None
-            try:
-                res = self.agent_reach_fetcher.fetch(url)
-                if res and res.status_code == 200 and res.content:
-                    result = res
-            except Exception as e:
-                logger.debug(f"Agent Reach fetch fallback triggered for '{url}': {e}")
-
-            if not result or not result.raw_content:
-                try:
-                    result = self.fetcher.fetch(url)
-                except Exception as e:
-                    logger.warning(f"WebFetcher failed for '{url}': {e}")
-                    continue
-
-            if result and result.raw_content:
-                # 3. Prompt injection detection and sanitization
-                text = result.raw_content.decode("utf-8", errors="replace")
-                is_inj, cleaned_text = ContentSanitizer.detect_prompt_injection(text)
-                if is_inj:
-                    logger.warning(f"Prompt injection risk detected in source '{url}'. Content sanitized.")
-                    result.raw_content = ContentSanitizer.sanitize_untrusted_text(text).encode("utf-8")
-                acquired.append(result)
-
-        logger.info(f"AcquisitionEngine: Successfully acquired {len(acquired)}/{len(sources)} sources.")
+        logger.info(f"AcquisitionEngine: Successfully acquired {len(acquired)}/{len(sources[:max_sources])} sources.")
         return acquired

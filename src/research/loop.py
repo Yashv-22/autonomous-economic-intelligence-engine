@@ -42,10 +42,10 @@ class AutonomousResearchLoop:
         while iteration <= max_iterations:
             logger.info(f"--- Research Iteration {iteration}/{max_iterations} (Run: {run_id}) ---")
 
-            # Execute full hierarchical workflow for current objective
+            # Execute full hierarchical workflow for current objective (local_dir only on iteration 1)
             current_dossier = self.orchestrator.execute_research_workflow(
                 objective=objective,
-                local_dir=local_dir,
+                local_dir=local_dir if iteration == 1 else None,
                 output_dir=output_dir,
             )
 
@@ -53,7 +53,8 @@ class AutonomousResearchLoop:
             claims = self.orchestrator.knowledge_manager.relational.get_claims(run_id=run_id)
             gaps = ResearchGapDetector.detect_gaps(objective, claims)
 
-            if not gaps or iteration >= max_iterations:
+            # High-speed saturation check: stop if sufficient evidence or gaps resolved
+            if not gaps or len(claims) >= 1500 or iteration >= max_iterations:
                 logger.info("Stopping criteria met: Evidence threshold satisfied or iteration budget exhausted.")
                 break
 

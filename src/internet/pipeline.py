@@ -38,6 +38,7 @@ class InternetAcquisitionPipeline:
         queries: List[str],
         max_sources: int = 5,
         channel: Optional[str] = None,
+        research_run_id: Optional[str] = None,
     ) -> List[SourceSpan]:
         """
         Execute full autonomous acquisition lifecycle from queries to verifiable spans.
@@ -58,6 +59,7 @@ class InternetAcquisitionPipeline:
         fetched_sources = self.acquisition.acquire_sources(
             sources=discovered_items,
             max_sources=max_sources,
+            research_run_id=research_run_id,
         )
         if not fetched_sources:
             logger.info("InternetPipeline: No sources could be fetched successfully.")

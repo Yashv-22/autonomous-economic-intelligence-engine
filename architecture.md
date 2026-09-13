@@ -120,3 +120,38 @@ The inference subsystem is governed by a unified **Model Gateway** (`src/gateway
     This architecture guarantees zero crashes during autonomous research loops even when upstream rate limits, quota exhaustions, or network partitions occur.
 *   **Cost Accounting & Observability:** Automatically tracks token consumption and calculates USD costs (with FreeLLMAPI accounted at $0.00), emitting real-time `MODEL_GENERATION_COMPLETED` events onto the system `event_bus`.
 
+---
+
+## 8. Web Intelligence Fabric (Phase 2 Upgrade)
+
+The autonomous research loop is upgraded with a modular **Web Intelligence Fabric** (`src/internet/`) providing deep web investigation capabilities without modifying the authoritative core intelligence architecture:
+
+### 8.1 Provider Abstraction & Contracts
+*   **Normalized Protocols:** All web acquisition components adhere to standardized provider interfaces (`BaseSearchProvider`, `BaseFetchProvider`, `BaseCrawlerProvider`, `BaseMapProvider`, `BaseBrowserProvider` in `src/internet/providers/base.py`).
+*   **Decoupled Capabilities:** High-level reasoning systems (Research Director, Investigation Planner, ToolRegistry) interact solely with capability contracts (`search`, `fetch`, `scrape`, `crawl`, `map`, `render_dynamic`, `browser_navigate`), isolating upstream engines from vendor-specific network APIs.
+
+### 8.2 Capability Providers
+*   **Firecrawl Provider (`src/internet/providers/firecrawl_provider.py`):** Interfaces with Firecrawl service via HTTP boundary to deliver high-fidelity Markdown scraping, recursive depth-controlled site crawling, and whole-domain URL topology mapping (`/v1/map`), protected by pre-dispatch SSRF validation and SHA-256 evidence hashing.
+*   **Crawl4AI Provider (`src/internet/providers/crawl4ai_provider.py`):** Interfaces with Crawl4AI REST service boundary on port 11235 for dynamic JavaScript rendering, client-side SPA DOM hydration, and structured Markdown conversion without polluting the host environment with heavy browser dependencies.
+*   **Agent Reach Provider (`src/internet/providers/agent_reach_provider.py`):** Handles platform syndication (YouTube transcript extraction, RSS/Atom feeds) and multi-channel discovery.
+*   **Native Web Fetcher (`src/internet/fetcher/fetcher.py`):** High-speed, lightweight static HTTP acquisition with gzip decompression and connection pooling.
+
+### 8.3 Adaptive Acquisition Router (`src/internet/acquisition/router.py`)
+*   **Capability-Driven Routing:** Dynamically evaluates research requirements:
+    *   *Static Known URL* $\rightarrow$ Native HTTP Fetcher.
+    *   *Client-Side SPA / Dynamic JavaScript* $\rightarrow$ Crawl4AI (with Firecrawl fallback).
+    *   *Explicit Page Scrape* $\rightarrow$ Firecrawl Scrape (with Crawl4AI fallback).
+    *   *Domain Topology Discovery* $\rightarrow$ Firecrawl Map.
+    *   *Deep Recursive Crawl* $\rightarrow$ Firecrawl Crawl.
+    *   *Syndicated Feeds / Media* $\rightarrow$ Agent Reach.
+*   **Truthful Lifecycle Tracking:** Audit records explicitly distinguish between `CONFIGURED`, `ELIGIBLE`, `SELECTED`, `ATTEMPTED`, `SUCCEEDED`, `FAILED`, and `FALLBACK`. Failed providers are never marked executed.
+*   **Canonical Source Identity:** Cross-provider deduplication generates deterministic source identifiers (`SRC-<SHA256[:12]>`) based on normalized URL structure, preventing duplicate logical entities in the Knowledge Graph when multiple providers acquire the same target.
+*   **Credential-Free Telemetry:** Detailed execution audits log latency, status codes, and provider lifecycles while strictly redacting sensitive tokens and API keys.
+
+### 8.4 Security & Defensive Isolation
+*   **SSRF Defense:** Mandatory pre-dispatch IP/scheme resolution (`src/security/network.py`) strictly forbids loopback (`127.0.0.1`, `localhost`), link-local (`169.254.169.254`), and RFC 1918 private subnets.
+*   **Prompt Injection Containment:** External untrusted web text is sanitized via `ContentSanitizer`, defusing prompt injection markers (`[DEFUSED_INJECTION_MARKER: ...]`) before LLM ingestion.
+*   **Mock / Fixture Isolation:** Offline fixtures carry unmistakable metadata (`evidence_status="TEST_FIXTURE"`, `is_mock=True`) and are strictly barred from entering production research runs or mutating persistent knowledge.
+*   **Web Agent Standalone Boundary:** Audited `@firecrawl/agent-core` (`infrastructure/web-agent-main/`) was determined to feature unconstrained `bashExec` shell execution without OS sandbox support on Windows. In compliance with security directives, Web Agent remains strictly standalone and is prevented from executing unmonitored system calls.
+
+

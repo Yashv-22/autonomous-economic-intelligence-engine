@@ -53,9 +53,9 @@ class ResearchBudgetConfig(BaseModel):
 
 class ModelGatewayConfig(BaseModel):
     """Model provider and routing configuration."""
-    default_provider: str = Field(default_factory=lambda: os.environ.get("DEFAULT_LLM_PROVIDER", "omniroute"))
+    default_provider: str = Field(default_factory=lambda: os.environ.get("DEFAULT_LLM_PROVIDER", "gemini"))
     gemini_api_key: Optional[str] = Field(default_factory=lambda: os.environ.get("GEMINI_API_KEY"))
-    gemini_model_name: str = Field(default_factory=lambda: os.environ.get("GEMINI_MODEL_NAME", "gemini-3.7-flash"))
+    gemini_model_name: str = Field(default_factory=lambda: os.environ.get("GEMINI_MODEL_NAME", "gemini-2.5-flash"))
     openai_api_key: Optional[str] = Field(default_factory=lambda: os.environ.get("OPENAI_API_KEY"))
     openai_model_name: str = Field(default_factory=lambda: os.environ.get("OPENAI_MODEL_NAME", "gpt-4o"))
     openai_base_url: str = Field(default_factory=lambda: os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1"))

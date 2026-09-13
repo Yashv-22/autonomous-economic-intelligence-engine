@@ -21,11 +21,20 @@ class SearchTool(BaseTool):
         super().__init__()
         self.engine = search_engine or MultiProviderSearchEngine()
 
-    def run(self, query: str = "", max_results: int = 10, dimension: Optional[str] = None, **kwargs) -> Any:
+    def run(
+        self,
+        query: str = "",
+        max_results: int = 10,
+        dimension: Optional[str] = None,
+        include_academic: bool = True,
+        **kwargs
+    ) -> Any:
         """Execute multi-provider search query."""
         results: List[SearchResultItem] = self.engine.search(
             query=query,
             max_results=max_results,
             dimension=dimension,
+            include_academic=include_academic,
         )
         return [r.dict() for r in results]
+

@@ -116,9 +116,17 @@ from src.tools.fetch_tool import FetchTool
 from src.tools.extract_tool import ExtractTool
 from src.tools.crawl_tool import CrawlTool
 from src.tools.agent_reach_tool import AgentReachTool
+from src.tools.scrape_tool import ScrapeTool
+from src.tools.map_tool import MapSiteTool
+from src.tools.dynamic_render_tool import RenderDynamicPageTool
+from src.tools.browser_tool import BrowserTool
 
 default_tool_registry.register_tool(SearchTool())
 default_tool_registry.register_tool(FetchTool())
 default_tool_registry.register_tool(ExtractTool())
 default_tool_registry.register_tool(CrawlTool())
 default_tool_registry.register_tool(AgentReachTool())
+default_tool_registry.register_tool(ScrapeTool())
+default_tool_registry.register_tool(MapSiteTool())
+default_tool_registry.register_tool(RenderDynamicPageTool())
+default_tool_registry.register_tool(BrowserTool())

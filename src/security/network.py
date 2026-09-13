@@ -103,8 +103,33 @@ class NetworkSecurityValidator:
             # DNS resolution failure
             raise SecurityViolationError(f"DNS resolution failed for host '{hostname}': {e}")
 
+    NAT64_PREFIX_1 = ipaddress.ip_network("64:ff9b::/96")
+    NAT64_PREFIX_2 = ipaddress.ip_network("64:ff9b:1::/48")
+
     def _verify_ip(self, ip_obj: ipaddress.IPv4Address | ipaddress.IPv6Address):
         """Check if IP falls into any forbidden subnet."""
+        # Handle RFC 6052 / RFC 8215 NAT64 translation prefixes (IPv4-mapped global IPv6)
+        if isinstance(ip_obj, ipaddress.IPv6Address) and (
+            ip_obj in self.NAT64_PREFIX_1 or ip_obj in self.NAT64_PREFIX_2
+        ):
+            embedded_ipv4 = ipaddress.IPv4Address(ip_obj.packed[-4:])
+            if (
+                embedded_ipv4.is_private
+                or embedded_ipv4.is_loopback
+                or embedded_ipv4.is_link_local
+                or embedded_ipv4.is_multicast
+                or embedded_ipv4.is_reserved
+            ):
+                raise SecurityViolationError(
+                    f"SSRF violation: Access to private/loopback IP '{ip_obj}' (embedded {embedded_ipv4}) is blocked."
+                )
+            for blocked_net in self.blocked_ip_ranges:
+                if embedded_ipv4 in blocked_net:
+                    raise SecurityViolationError(
+                        f"SSRF violation: IP '{ip_obj}' (embedded {embedded_ipv4}) belongs to blocked subnet '{blocked_net}'."
+                    )
+            return
+
         if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local or ip_obj.is_multicast or ip_obj.is_reserved:
             raise SecurityViolationError(
                 f"SSRF violation: Access to private/loopback IP '{ip_obj}' is blocked."

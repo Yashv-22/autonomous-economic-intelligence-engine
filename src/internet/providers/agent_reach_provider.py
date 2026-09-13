@@ -130,7 +130,15 @@ class AgentReachSearchProvider(BaseSearchProvider):
         if api_key:
             try:
                 url = "https://api.exa.ai/search"
-                req_data = json.dumps({"query": query, "numResults": max_results, "useAutoprompt": True}).encode("utf-8")
+                req_data = json.dumps({
+                    "query": query,
+                    "numResults": max_results,
+                    "type": "auto",
+                    "contents": {
+                        "highlights": True,
+                        "text": {"maxCharacters": 1500}
+                    }
+                }).encode("utf-8")
                 req = urllib.request.Request(
                     url,
                     data=req_data,
@@ -140,7 +148,7 @@ class AgentReachSearchProvider(BaseSearchProvider):
                         "User-Agent": "AutonomousResearchEngine/2.0",
                     },
                 )
-                with urllib.request.urlopen(req, timeout=3.5) as resp:
+                with urllib.request.urlopen(req, timeout=5.0) as resp:
                     data = json.loads(resp.read().decode("utf-8"))
                     results_data = data.get("results", [])
                     items: List[SearchResultItem] = []
@@ -149,19 +157,33 @@ class AgentReachSearchProvider(BaseSearchProvider):
                         if not r_url:
                             continue
                         title = r.get("title", f"Exa Result #{idx}")
-                        snippet = r.get("text", r.get("snippet", title))
+                        highlights = r.get("highlights", [])
+                        text = r.get("text", "")
+                        # Prioritize verbatim highlights as high-fidelity evidence snippet
+                        if highlights and isinstance(highlights, list) and len(highlights) > 0:
+                            snippet = " ... ".join([h.strip() for h in highlights[:2]])
+                        elif text:
+                            snippet = text[:400].strip()
+                        else:
+                            snippet = r.get("snippet", title)
+
                         parsed = urllib.parse.urlparse(r_url)
                         items.append(
                             SearchResultItem(
                                 title=title,
                                 url=r_url,
-                                snippet=snippet[:300] if snippet else "",
+                                snippet=snippet,
                                 source_domain=parsed.netloc or "exa.ai",
                                 provider=self.provider_name,
                                 rank=idx,
                                 source_type="web",
                                 relevance_score=max(0.2, 0.95 - (idx * 0.05)),
-                                metadata={"backend": "exa_rest_api", "channel": "search"},
+                                metadata={
+                                    "backend": "exa_rest_api",
+                                    "channel": "search",
+                                    "highlights": highlights,
+                                    "text": text,
+                                },
                             )
                         )
                     if items:

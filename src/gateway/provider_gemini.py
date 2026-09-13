@@ -15,13 +15,13 @@ class GeminiModelProvider(BaseModelProvider):
 
     name: str = "gemini"
 
-    # Priority rotation models for Gemini free/standard tier
+    # Priority rotation models for Gemini free/standard tier (active models first for instant execution)
     ROTATION_MODELS = [
-        "gemini-3.7-flash",
-        "gemini-3.6-flash",
-        "gemini-flash-latest",
-        "gemma-4-31b-it",
         "gemini-2.5-flash",
+        "gemini-2.0-flash",
+        "gemini-1.5-flash",
+        "gemini-1.5-pro",
+        "gemini-flash-latest",
     ]
 
     def __init__(self, api_key: Optional[str] = None):

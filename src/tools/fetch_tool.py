@@ -10,6 +10,9 @@ from src.internet.fetcher.fetcher import WebFetcher
 from src.core.identifiers import compute_sha256
 
 
+from src.internet.acquisition.router import AdaptiveAcquisitionRouter, AcquisitionRequirement
+
+
 class FetchTool(BaseTool):
     """Executes safe HTTP GET requests with SSRF guards and content hashing."""
 
@@ -18,9 +21,15 @@ class FetchTool(BaseTool):
     permission_level: ToolPermission = ToolPermission.READ_ONLY
     requires_network: bool = True
 
-    def __init__(self, fetcher: Optional[WebFetcher] = None, mock_web_index: Optional[Dict[str, str]] = None):
+    def __init__(
+        self,
+        fetcher: Optional[WebFetcher] = None,
+        router: Optional[AdaptiveAcquisitionRouter] = None,
+        mock_web_index: Optional[Dict[str, str]] = None
+    ):
         super().__init__()
         self.fetcher = fetcher or WebFetcher()
+        self.router = router or AdaptiveAcquisitionRouter(native_fetcher=self.fetcher)
         self.mock_web_index = mock_web_index or {}
 
     def run(self, url: str = "", timeout_seconds: int = 10, **kwargs) -> Any:
@@ -47,7 +56,12 @@ class FetchTool(BaseTool):
                 "is_mock": True,
             }
 
-        res = self.fetcher.fetch(url=url, timeout_seconds=timeout_seconds)
+        req = AcquisitionRequirement(url=url, timeout_seconds=float(timeout_seconds))
+        try:
+            res, audit = self.router.route_acquisition(req)
+        except Exception:
+            res = self.fetcher.fetch(url=url, timeout_seconds=timeout_seconds)
+
         if not res.is_success:
             raise RuntimeError(res.error_message or "Fetch failed.")
 

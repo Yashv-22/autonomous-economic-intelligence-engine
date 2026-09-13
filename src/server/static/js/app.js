@@ -79,6 +79,10 @@ function switchTab(tabId) {
         loadAuditTrail();
     } else if (tabId === 'history') {
         renderHistoryTabTable();
+    } else if (tabId === 'client-intel') {
+        if (typeof initClientIntelligence === 'function') {
+            initClientIntelligence();
+        }
     } else if (tabId === 'overview') {
         setTimeout(renderRadar, 50);
     }
@@ -2377,10 +2381,10 @@ function renderDossierHypotheses(hypotheses) {
                     ${escapeHtml(h.title)}
                 </div>
                 <div style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.5;">
-                    <strong>Formal Hypothesis ($H_1$):</strong> ${formatDossierInline(h.statement)}
+                    <strong>Formal Hypothesis (H₁):</strong> ${formatDossierInline(h.statement)}
                 </div>
                 <div style="font-size: 12px; color: var(--text-muted); background: var(--bg-surface); padding: 8px 10px; border-radius: 4px; border: 1px dashed var(--border-subtle); margin-bottom: 6px;">
-                    <strong>Null Hypothesis ($H_0$):</strong> <code>${escapeHtml(h.null_hypothesis)}</code>
+                    <strong>Null Hypothesis (H₀):</strong> <code>${escapeHtml(h.null_hypothesis)}</code>
                 </div>
                 <div style="font-size: 12px; color: var(--text-secondary);">
                     <strong>Falsification Criteria:</strong> ${formatDossierInline(h.falsification_criteria)}

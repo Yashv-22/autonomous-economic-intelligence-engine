@@ -40,40 +40,44 @@
             </div>
             
             <div class="header-status-strip">
-                <div class="status-pill" id="pill-gateway" title="Active Model Gateway">
-                    <span>GATEWAY:</span>
-                    <strong id="header-active-gateway">FREELLMAPI</strong>
+                <div class="header-telemetry-group">
+                    <div class="status-pill" id="pill-gateway" title="Active Model Gateway">
+                        <span>GATEWAY:</span>
+                        <strong id="header-active-gateway">FREELLMAPI</strong>
+                    </div>
+                    <div class="status-pill" id="pill-hist-claims" title="Historical Claim Records (Preserved Corpus)">
+                        <span>HISTORICAL:</span>
+                        <strong id="header-historical-claims">0</strong>
+                    </div>
+                    <div class="status-pill" id="pill-claims" title="Persistent Deduplicated Claims (Canonical Fingerprints)">
+                        <span>CANONICAL:</span>
+                        <strong id="header-claims-count">0</strong>
+                    </div>
+                    <div class="status-pill" id="pill-run-claims" title="Current Run New Claims (Run Delta)">
+                        <span>RUN DELTA:</span>
+                        <strong id="header-run-claims">0</strong>
+                    </div>
+                    <div class="status-pill" id="pill-opps" title="Discovered Opportunities">
+                        <span>OPPORTUNITIES:</span>
+                        <strong id="header-opps-count">0</strong>
+                    </div>
+                    <div class="status-pill" id="pill-provenance" title="Merkle Root Hash">
+                        <span>MERKLE:</span>
+                        <strong id="header-merkle-root">GENESIS</strong>
+                    </div>
                 </div>
-                <div class="status-pill" id="pill-hist-claims" title="Historical Claim Records (Preserved Corpus)">
-                    <span>HISTORICAL:</span>
-                    <strong id="header-historical-claims">0</strong>
+
+                <div class="header-actions-group">
+                    <button class="btn btn-secondary btn-sm" id="btn-verify-chain" onclick="verifySequentialAuditChain()" title="Verify SHA-256 Merkle Chain Continuity">
+                        Verify Audit Chain
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="btn-open-diagnostics" onclick="openDiagnosticsModal()" title="System Diagnostics & Telemetry">
+                        Diagnostics
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="btn-open-llm-config" onclick="openLlmConfigModal()" title="Configure LLM Providers & API Keys">
+                        Gateway Config
+                    </button>
                 </div>
-                <div class="status-pill" id="pill-claims" title="Persistent Deduplicated Claims (Canonical Fingerprints)">
-                    <span>CANONICAL:</span>
-                    <strong id="header-claims-count">0</strong>
-                </div>
-                <div class="status-pill" id="pill-run-claims" title="Current Run New Claims (Run Delta)">
-                    <span>RUN DELTA:</span>
-                    <strong id="header-run-claims">0</strong>
-                </div>
-                <div class="status-pill" id="pill-opps" title="Discovered Opportunities">
-                    <span>OPPORTUNITIES:</span>
-                    <strong id="header-opps-count">0</strong>
-                </div>
-                <div class="status-pill" id="pill-provenance" title="Merkle Root Hash">
-                    <span>MERKLE:</span>
-                    <strong id="header-merkle-root">GENESIS</strong>
-                </div>
-                
-                <button class="btn btn-secondary btn-sm" id="btn-verify-chain" onclick="verifySequentialAuditChain()">
-                    Verify Audit Chain
-                </button>
-                <button class="btn btn-secondary btn-sm" id="btn-open-diagnostics" onclick="openDiagnosticsModal()">
-                    Diagnostics
-                </button>
-                <button class="btn btn-secondary btn-sm" id="btn-open-llm-config" onclick="openLlmConfigModal()">
-                    Gateway Config
-                </button>
             </div>
         </header>
 
@@ -253,7 +257,7 @@
                                 <span>Opportunity Radar: Severity vs. Willingness-to-Pay</span>
                             </span>
                             <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
-                                Heuristic Scatter Matrix ($I_{opp}$)
+                                Heuristic Scatter Matrix (I<sub>opp</sub>)
                             </span>
                         </div>
                         <div class="pane-content" style="padding: 12px;">

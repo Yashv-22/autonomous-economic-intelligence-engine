@@ -49,7 +49,7 @@ class ModelGateway:
     """Central gateway routing LLM requests with capability-aware fallback and cost metering."""
 
     def __init__(self, default_provider: Optional[str] = None):
-        self.default_provider = default_provider or settings.model.default_provider or "omniroute"
+        self.default_provider = default_provider or settings.model.default_provider or "gemini"
         self.providers: Dict[str, BaseModelProvider] = {
             "omniroute": OmniRouteModelProvider(),
             "gemini": GeminiModelProvider(),
@@ -173,12 +173,15 @@ class ModelGateway:
 
         # 2. Capability-aware fallback chain across all configured providers
         if response is None:
-            priority_order = ["omniroute", "gemini", "freellmapi", "openai"]
+            priority_order = ["gemini", "freellmapi", "openai", "omniroute"]
             candidate_chain = [p for p in priority_order if p in self.providers and p not in attempted_providers]
 
             for fb_name in candidate_chain:
                 fb_prov = self.providers.get(fb_name)
                 if not fb_prov:
+                    continue
+                # Skip known unavailable providers instantly without network latency
+                if hasattr(fb_prov, "is_available") and not fb_prov.is_available():
                     continue
                 attempted_providers.add(fb_name)
                 fb_model = self.resolve_model_for_capability(fb_name, cap)

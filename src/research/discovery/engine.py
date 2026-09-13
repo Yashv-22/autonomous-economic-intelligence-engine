@@ -58,7 +58,11 @@ class AutonomousResearchEngine:
         session_store: Optional[ResearchSessionStore] = None,
     ):
         self.search_engine = search_engine or MultiProviderSearchEngine()
-        self.fetcher = fetcher or WebFetcher()
+        if fetcher:
+            self.fetcher = fetcher
+        else:
+            from src.internet.acquisition.router import AdaptiveAcquisitionRouter
+            self.fetcher = AdaptiveAcquisitionRouter()
         self.crawler = crawler or AutonomousWebCrawler(fetcher=self.fetcher)
         self.km = knowledge_manager or KnowledgeManager()
         self.raw_corpus = raw_corpus or RawCorpusManager()
@@ -97,8 +101,8 @@ class AutonomousResearchEngine:
         contradictions: List[ContradictionRecord] = []
         hypotheses: List[ProblemHypothesis] = []
 
-        # 2. Local Document Ingestion (Baseline context)
-        if local_dir and os.path.exists(local_dir):
+        # 2. Local Document Ingestion (Baseline context) only if explicit external directory provided
+        if local_dir and local_dir not in [".", "./"] and os.path.exists(local_dir):
             try:
                 local_spans = self.doc_parser.ingest_directory(local_dir)
                 all_spans.extend(local_spans)
@@ -124,53 +128,115 @@ class AutonomousResearchEngine:
                     if gap
                 ]
 
-            # B. Execute Multi-Provider Searches & Rank Sources
+            # B. Execute Multi-Provider Searches Concurrently Across Dimensions (Speed Optimization)
+            import concurrent.futures
             new_search_results = []
-            for rq in queries:
-                if rq.query_text in session.executed_queries:
-                    continue
+            unexecuted_queries = [rq for rq in queries if rq.query_text not in session.executed_queries]
 
-                logger.info(f"Searching [{rq.dimension}]: '{rq.query_text}'")
-                results = self.search_engine.search(rq.query_text, max_results=5, dimension=rq.dimension)
-                self.session_store.record_query_execution(session, rq.query_text, len(results))
-                new_search_results.extend(results)
+            if unexecuted_queries:
+                def _execute_single_search(rq):
+                    try:
+                        logger.info(f"Searching [{rq.dimension}]: '{rq.query_text}'")
+                        res = self.search_engine.search(rq.query_text, max_results=5, dimension=rq.dimension)
+                        return rq, res
+                    except Exception as err:
+                        logger.warning(f"Error searching [{rq.dimension}]: {err}")
+                        return rq, []
+
+                with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(unexecuted_queries), 5)) as s_exec:
+                    for rq, results in s_exec.map(_execute_single_search, unexecuted_queries):
+                        self.session_store.record_query_execution(session, rq.query_text, len(results))
+                        new_search_results.extend(results)
 
             # C. Rank and Prioritize Sources
             ranked_results = SourceRanker.rank_sources(new_search_results, objective.query)
             target_urls = [r.url for r in ranked_results if r.url not in session.visited_urls][:budget_sources]
 
-            # D. Fetch & Crawl Public Internet Sources
+            # D. Fetch & Crawl Public Internet Sources (concurrently for fastest speed)
             acquired_web_spans: List[SourceSpan] = []
-            for url in target_urls:
-                self.session_store.record_visited_urls(session, [url])
-                fetch_res = self.fetcher.fetch(url)
 
-                if not fetch_res.is_success or not fetch_res.raw_content:
-                    continue
+            # Direct Ingestion of Verbatim Highlights & High-Fidelity Quotes (Zero-latency Merkle Provenance)
+            for item in new_search_results:
+                title = item.title or "Web Discovery Source"
+                url = item.url or ""
+                metadata = getattr(item, "metadata", {}) or {}
 
-                # Store in Raw Corpus
-                raw_path = self.raw_corpus.store_raw_artifact(fetch_res, metadata_extra={"topic": objective.topic})
+                # Direct Exa verbatim highlights as authentic source spans
+                highlights = metadata.get("highlights") or []
+                if isinstance(highlights, list):
+                    for h_idx, h in enumerate(highlights):
+                        h_clean = h.strip()
+                        if len(h_clean) >= 30:
+                            h_hash = compute_sha256(h_clean.encode("utf-8"))
+                            acquired_web_spans.append(
+                                SourceSpan(
+                                    document_name=title,
+                                    document_hash=h_hash,
+                                    page_or_section=f"Verbatim Evidence / Highlight #{h_idx+1}",
+                                    paragraph_index=h_idx,
+                                    text=h_clean,
+                                    span_hash=h_hash,
+                                    source_url=url,
+                                    start_char=0,
+                                    end_char=len(h_clean),
+                                )
+                            )
 
-                # Parse into Spans
-                doc_name = fetch_res.url.split("//")[-1].split("?")[0]
-                if "html" in fetch_res.content_type.lower():
-                    spans = WebContentParser.parse_html(fetch_res.raw_content, fetch_res.url, doc_name)
-                elif "pdf" in fetch_res.content_type.lower():
-                    spans = WebContentParser.parse_pdf(fetch_res.raw_content, fetch_res.url, doc_name)
-                elif "markdown" in fetch_res.content_type.lower():
-                    spans = WebContentParser.parse_markdown(fetch_res.raw_content, fetch_res.url, doc_name)
-                else:
-                    spans = WebContentParser.parse_markdown(fetch_res.raw_content, fetch_res.url, doc_name)
-
-                if spans:
-                    # Store in Normalized Corpus
-                    self.normalized_corpus.store_normalized_document(
-                        document_hash=fetch_res.content_hash,
-                        document_name=doc_name,
-                        source_url=fetch_res.url,
-                        spans=spans,
+                # Snippet fallback if no highlights present
+                snippet = getattr(item, "snippet", "") or ""
+                if snippet and len(snippet.strip()) >= 40 and not highlights:
+                    s_clean = snippet.strip()
+                    s_hash = compute_sha256(s_clean.encode("utf-8"))
+                    acquired_web_spans.append(
+                        SourceSpan(
+                            document_name=title,
+                            document_hash=s_hash,
+                            page_or_section="Abstract / Search Evidence",
+                            paragraph_index=0,
+                            text=s_clean,
+                            span_hash=s_hash,
+                            source_url=url,
+                            start_char=0,
+                            end_char=len(s_clean),
+                        )
                     )
-                    acquired_web_spans.extend(spans)
+
+            def _fetch_single_source(url: str) -> List[SourceSpan]:
+                try:
+                    fetch_res = self.fetcher.fetch(url, timeout_seconds=8.0)
+                    if not fetch_res.is_success or not fetch_res.raw_content:
+                        return []
+
+                    # Store in Raw Corpus
+                    self.raw_corpus.store_raw_artifact(fetch_res, metadata_extra={"topic": objective.topic})
+
+                    # Parse into Spans
+                    doc_name = fetch_res.url.split("//")[-1].split("?")[0]
+                    if "html" in fetch_res.content_type.lower():
+                        spans = WebContentParser.parse_html(fetch_res.raw_content, fetch_res.url, doc_name)
+                    elif "pdf" in fetch_res.content_type.lower():
+                        spans = WebContentParser.parse_pdf(fetch_res.raw_content, fetch_res.url, doc_name)
+                    else:
+                        spans = WebContentParser.parse_markdown(fetch_res.raw_content, fetch_res.url, doc_name)
+
+                    if spans:
+                        self.normalized_corpus.store_normalized_document(
+                            document_hash=fetch_res.content_hash,
+                            document_name=doc_name,
+                            source_url=fetch_res.url,
+                            spans=spans,
+                        )
+                        return spans
+                except Exception as fetch_err:
+                    logger.warning(f"Error fetching source '{url}': {fetch_err}")
+                return []
+
+            if target_urls:
+                self.session_store.record_visited_urls(session, target_urls)
+                with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(target_urls), 8)) as executor:
+                    for s_list in executor.map(_fetch_single_source, target_urls):
+                        if s_list:
+                            acquired_web_spans.extend(s_list)
 
             all_spans.extend(acquired_web_spans)
             logger.info(f"Iteration {iteration}: Acquired {len(acquired_web_spans)} new web text spans from {len(target_urls)} sources.")

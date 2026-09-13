@@ -17,7 +17,17 @@ class IngestionAgent(BaseAgent):
     name: str = "IngestionAgent"
     role: str = "Source Acquisition & Provenance Specialist"
     description: str = "Acquires documents from filesystem or web, parses spans, and anchors Merkle provenance."
-    allowed_tools: List[str] = ["search_sources", "fetch_web_content", "extract_spans"]
+    allowed_tools: List[str] = [
+        "search_sources",
+        "fetch_web_content",
+        "extract_spans",
+        "agent_reach",
+        "scrape_page",
+        "deep_crawl",
+        "map_site",
+        "render_dynamic_page",
+        "browser_navigate",
+    ]
     permission_level: ToolPermission = ToolPermission.READ_ONLY
 
     def __init__(self, **kwargs):
@@ -34,38 +44,76 @@ class IngestionAgent(BaseAgent):
     ) -> List[SourceSpan]:
         """
         Ingest local documents and/or search & fetch online documents.
+        Uses concurrent harvesting across Agent Reach, Exa, and Adaptive Router.
         """
         all_spans: List[SourceSpan] = []
+        seen_span_hashes = set()
 
-        # 1. Ingest local directory files if specified
-        if local_dir:
+        def _add_span(sp: SourceSpan):
+            if sp.span_hash not in seen_span_hashes:
+                seen_span_hashes.add(sp.span_hash)
+                all_spans.append(sp)
+
+        # 1. Ingest local directory files only if an explicit external directory is provided
+        if local_dir and local_dir not in [".", "./"] and os.path.exists(local_dir):
             local_spans = self.doc_engine.ingest_directory(local_dir, supported_extensions=[".pdf", ".docx", ".txt", ".md"])
-            all_spans.extend(local_spans)
+            for sp in local_spans:
+                _add_span(sp)
 
         # 2. Acquire via search and fetch tools if queries provided
         if search_queries:
             import concurrent.futures
-            from datetime import datetime, timezone
 
             discovered_items: List[Dict[str, Any]] = []
             seen_urls = set()
-            for q in search_queries[:3]:
+
+            # Execute searches concurrently across queries for maximum speed
+            def _execute_single_query(q: str) -> List[Dict[str, Any]]:
                 search_res = self.invoke_tool(context, "search_sources", query=q, max_results=5)
                 if search_res.success and search_res.output:
-                    for item in search_res.output:
+                    return search_res.output
+                return []
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(search_queries), 6)) as s_exec:
+                for items in s_exec.map(_execute_single_query, search_queries):
+                    for item in items:
                         url = item.get("url")
                         if url and url not in seen_urls:
                             seen_urls.add(url)
                             discovered_items.append(item)
 
-            # Ingest rich search snippets directly as guaranteed provenance spans
+            # Ingest rich search highlights & snippets directly as guaranteed provenance spans
             for item in discovered_items:
-                snippet = item.get("snippet", "").strip()
                 title = item.get("title") or "Web Discovery Source"
                 url = item.get("url") or ""
-                if snippet and len(snippet) >= 30:
+                metadata = item.get("metadata") or {}
+
+                # A. Direct Exa verbatim highlights (Zero network fetch latency)
+                highlights = metadata.get("highlights") or []
+                if isinstance(highlights, list):
+                    for h_idx, h in enumerate(highlights):
+                        h_clean = h.strip()
+                        if len(h_clean) >= 30:
+                            h_hash = compute_sha256(h_clean)
+                            _add_span(
+                                SourceSpan(
+                                    document_name=title,
+                                    document_hash=h_hash,
+                                    page_or_section=f"Verbatim Evidence / Highlight #{h_idx+1}",
+                                    paragraph_index=h_idx,
+                                    text=h_clean,
+                                    span_hash=h_hash,
+                                    source_url=url,
+                                    start_char=0,
+                                    end_char=len(h_clean),
+                                )
+                            )
+
+                # B. Snippet fallback if highlights not available
+                snippet = item.get("snippet", "").strip()
+                if snippet and len(snippet) >= 30 and not highlights:
                     s_hash = compute_sha256(snippet)
-                    all_spans.append(
+                    _add_span(
                         SourceSpan(
                             document_name=title,
                             document_hash=s_hash,
@@ -79,16 +127,16 @@ class IngestionAgent(BaseAgent):
                         )
                     )
 
-            # Concurrent web fetch for top URLs (with rapid timeout and raw_html support)
-            urls_to_fetch = [it.get("url") for it in discovered_items[:3] if it.get("url")]
+            # Concurrent web fetch for top URLs via Adaptive Router
+            urls_to_fetch = [it.get("url") for it in discovered_items[:8] if it.get("url")]
             if urls_to_fetch:
                 def _fetch_and_extract_url(target_url: str) -> List[SourceSpan]:
                     try:
-                        fetch_res = self.invoke_tool(context, "fetch_web_content", url=target_url, timeout_seconds=3.0)
+                        fetch_res = self.invoke_tool(context, "fetch_web_content", url=target_url, timeout_seconds=4.0)
                         if fetch_res.success and fetch_res.output:
                             data = fetch_res.output
                             raw_body = data.get("content") or data.get("raw_html") or data.get("text_preview") or ""
-                            if raw_body:
+                            if raw_body and len(raw_body) > 100:
                                 extract_res = self.invoke_tool(
                                     context,
                                     "extract_spans",
@@ -104,10 +152,11 @@ class IngestionAgent(BaseAgent):
                         logger.warning(f"Error fetching/extracting '{target_url}': {err}")
                     return []
 
-                with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(urls_to_fetch), 4)) as executor:
+                with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(urls_to_fetch), 8)) as executor:
                     for span_list in executor.map(_fetch_and_extract_url, urls_to_fetch):
                         if span_list:
-                            all_spans.extend(span_list)
+                            for sp in span_list:
+                                _add_span(sp)
 
         # Register in Provenance Ledger
         self.provenance_ledger.register_spans(all_spans)

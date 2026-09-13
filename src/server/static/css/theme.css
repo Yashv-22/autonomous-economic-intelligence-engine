@@ -78,7 +78,7 @@ body {
 .top-header {
     background-color: var(--bg-surface);
     border-bottom: 1px solid var(--border-subtle);
-    padding: 0 24px;
+    padding: 0 20px;
     height: 56px;
     display: flex;
     align-items: center;
@@ -86,12 +86,16 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    gap: 16px;
+    box-sizing: border-box;
 }
 
 .brand-section {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .brand-logo-wrapper {
@@ -118,12 +122,14 @@ body {
 .brand-title {
     font-family: var(--font-ui);
     font-weight: 700;
-    font-size: 15px;
+    font-size: 14.5px;
     letter-spacing: -0.02em;
     color: var(--text-primary);
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .brand-badge {
@@ -131,23 +137,33 @@ body {
     color: #ffffff;
     font-size: 10px;
     font-weight: 600;
-    padding: 2px 6px;
+    padding: 0 7px;
+    height: 20px;
+    line-height: 20px;
     border-radius: var(--radius-sm);
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .live-indicator {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
     color: var(--accent-emerald);
     background-color: var(--accent-emerald-subtle);
-    padding: 3px 8px;
-    border-radius: 12px;
+    padding: 0 10px;
+    height: 26px;
+    border-radius: 13px;
     border: 1px solid rgba(4, 120, 87, 0.2);
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-sizing: border-box;
 }
 
 .pulse-dot {
@@ -156,6 +172,7 @@ body {
     background-color: var(--accent-emerald);
     border-radius: 50%;
     animation: pulse 2s infinite;
+    flex-shrink: 0;
 }
 
 @keyframes pulse {
@@ -167,25 +184,82 @@ body {
 .header-status-strip {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    flex-shrink: 1;
+    min-width: 0;
+    justify-content: flex-end;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.header-status-strip::-webkit-scrollbar {
+    display: none;
+}
+
+.header-telemetry-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.header-telemetry-group::-webkit-scrollbar {
+    display: none;
+}
+
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding-left: 10px;
+    border-left: 1px solid var(--border-subtle);
 }
 
 .status-pill {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     font-size: 11px;
     color: var(--text-secondary);
     background-color: var(--bg-muted);
-    padding: 4px 10px;
+    padding: 0 10px;
+    height: 28px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
     font-family: var(--font-mono);
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    line-height: 28px;
 }
 
 .status-pill strong {
     color: var(--text-primary);
     font-weight: 600;
+}
+
+.top-header .btn {
+    height: 28px;
+    line-height: 26px;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    flex-shrink: 0;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 /* Main Navigation Bar */
@@ -383,6 +457,7 @@ body {
     cursor: pointer;
     transition: all 0.15s ease;
     border: 1px solid transparent;
+    white-space: nowrap;
 }
 
 .btn-primary {
@@ -2607,11 +2682,25 @@ strong, b, .thematic-title, .pane-title, th {
     }
 
     .header-status-strip {
-        gap: 10px;
+        gap: 8px;
+    }
+
+    .header-telemetry-group {
+        gap: 6px;
+    }
+
+    .header-actions-group {
+        gap: 6px;
+        padding-left: 8px;
     }
 
     .status-pill {
-        padding: 3px 8px;
+        padding: 0 8px;
+        font-size: 10.5px;
+    }
+
+    .top-header .btn {
+        padding: 0 10px;
         font-size: 10.5px;
     }
 
@@ -2647,10 +2736,20 @@ strong, b, .thematic-title, .pane-title, th {
         flex-wrap: nowrap;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
+        justify-content: flex-start;
     }
 
     .header-status-strip::-webkit-scrollbar {
         display: none;
+    }
+
+    .header-telemetry-group {
+        gap: 6px;
+    }
+
+    .header-actions-group {
+        gap: 6px;
+        padding-left: 8px;
     }
 
     .status-pill {
@@ -2658,7 +2757,7 @@ strong, b, .thematic-title, .pane-title, th {
         white-space: nowrap;
     }
 
-    .top-header .btn-sm {
+    .top-header .btn {
         flex-shrink: 0;
         white-space: nowrap;
     }
@@ -3296,6 +3395,72 @@ strong, b, .thematic-title, .pane-title, th {
         }
     }
 }
+
+/* ==========================================================================
+   Client Opportunity Intelligence Engine - Card & Layout Styling
+   ========================================================================== */
+.client-opp-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.client-opp-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border-color: rgba(29, 78, 216, 0.35);
+}
+
+.client-quote-box {
+    background: var(--bg-subtle);
+    border-left: 3px solid var(--accent-blue);
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 12px;
+    font-style: italic;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 52px;
+}
+
+.client-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.client-action-btn {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
 
 
 
