@@ -3,6 +3,7 @@ Ingestion & Provenance Agent.
 Discovers, fetches, and parses multi-format documents and web sources into cryptographic spans.
 """
 
+import os
 from typing import List, Dict, Any, Optional
 from src.agents.base import BaseAgent, AgentContext
 from src.models.schemas import ToolPermission, SourceSpan, ProvenanceMetadata
@@ -54,8 +55,8 @@ class IngestionAgent(BaseAgent):
                 seen_span_hashes.add(sp.span_hash)
                 all_spans.append(sp)
 
-        # 1. Ingest local directory files only if an explicit external directory is provided
-        if local_dir and local_dir not in [".", "./"] and os.path.exists(local_dir):
+        # 1. Ingest local directory files if provided
+        if local_dir and os.path.exists(local_dir):
             local_spans = self.doc_engine.ingest_directory(local_dir, supported_extensions=[".pdf", ".docx", ".txt", ".md"])
             for sp in local_spans:
                 _add_span(sp)

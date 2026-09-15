@@ -109,7 +109,16 @@ class OmniRouteModelProvider(BaseModelProvider):
                 "OmniRoute API key is not configured. Set OMNIROUTE_API_KEY in environment or .env."
             )
 
-        chosen_model = model or self.default_model
+        WORKLOAD_ALIASES = {
+            "research-general": "gemini-2.5-flash",
+            "research-fast": "gemini-2.5-flash",
+            "research-reasoning": "gemini-2.5-flash",
+            "auto/best-fast": "gemini-2.5-flash",
+            "auto/best-chat": "gemini-2.5-flash",
+            "auto/best-reasoning": "gemini-2.5-flash",
+        }
+        raw_model = model or self.default_model
+        chosen_model = WORKLOAD_ALIASES.get(raw_model, raw_model)
         payload = {
             "model": chosen_model,
             "messages": [{"role": m.role, "content": m.content} for m in messages],

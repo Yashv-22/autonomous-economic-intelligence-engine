@@ -97,7 +97,7 @@ class ModelGateway:
 
     def generate(
         self,
-        messages: List[ModelMessage],
+        messages: Union[str, List[ModelMessage]],
         provider_name: Optional[str] = None,
         model: Optional[str] = None,
         task_class: Optional[Union[TaskCapability, str]] = None,
@@ -111,6 +111,8 @@ class ModelGateway:
         Records exact 8-stage lifecycle telemetry:
         configured -> reachable -> eligible -> selected -> attempted -> succeeded/failed -> fallback -> executed
         """
+        if isinstance(messages, str):
+            messages = [ModelMessage(role="user", content=messages)]
         # Resolve capability tier
         cap = TaskCapability.REASONING
         if task_class:
@@ -180,8 +182,8 @@ class ModelGateway:
                 fb_prov = self.providers.get(fb_name)
                 if not fb_prov:
                     continue
-                # Skip known unavailable providers instantly without network latency
-                if hasattr(fb_prov, "is_available") and not fb_prov.is_available():
+                # Skip unconfigured providers instantly without network latency
+                if hasattr(fb_prov, "api_key") and not fb_prov.api_key:
                     continue
                 attempted_providers.add(fb_name)
                 fb_model = self.resolve_model_for_capability(fb_name, cap)

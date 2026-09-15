@@ -287,6 +287,10 @@ class DocumentIngestionEngine:
             ".venv",
             "venv",
             "__pycache__",
+            ".pytest_cache",
+            ".testsprite",
+            ".claude",
+            ".agents",
             "dist",
             "build",
             "scratch",
@@ -296,6 +300,9 @@ class DocumentIngestionEngine:
             "backups",
             "output",
             "output_audit_test",
+            "src",
+            "tests",
+            "scripts",
         }
         all_spans: List[SourceSpan] = []
         for root, dirs, files in os.walk(dir_path):
